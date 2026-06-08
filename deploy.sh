@@ -75,26 +75,13 @@ echo ""
 echo ">>> [SKIP] Composer — vendor/ ya viene compilado desde CI/CD"
 
 # =============================================================================
-# 1b. Crear .env con APP_KEY= si no existe
-#     artisan key:generate necesita el string "APP_KEY=" literal en el
-#     archivo para poder reemplazarlo. touch no sirve (archivo vacío falla).
-#     El resto de variables (DB, etc.) las inyecta Azure desde App Settings.
+# 1b. APP_KEY y resto de variables las inyecta Azure App Settings en runtime.
+#     No se genera .env ni se ejecuta key:generate — es redundante.
 # =============================================================================
-if [ ! -f /home/site/wwwroot/.env ]; then
-    echo ">>> .env no encontrado → creando con APP_KEY=..."
-    echo "APP_KEY=" > /home/site/wwwroot/.env
-fi
+echo ">>> [SKIP] APP_KEY — ya configurada en Azure App Settings"
 
 # =============================================================================
-# 2. Generar APP_KEY si no existe
-# =============================================================================
-if [ -z "$APP_KEY" ] || [ "$APP_KEY" = "None" ]; then
-    echo ">>> Generando APP_KEY..."
-    php artisan key:generate --force
-fi
-
-# =============================================================================
-# 3. Recrear estructura de storage (GitHub no sube directorios vacíos)
+# 2. Recrear estructura de storage (GitHub no sube directorios vacíos)
 # =============================================================================
 echo ">>> Creando estructura storage/framework..."
 mkdir -p /home/site/wwwroot/storage/framework/{sessions,views,cache}
