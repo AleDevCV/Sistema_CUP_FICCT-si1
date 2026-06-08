@@ -75,14 +75,14 @@ echo ""
 echo ">>> [SKIP] Composer — vendor/ ya viene compilado desde CI/CD"
 
 # =============================================================================
-# 1b. Crear .env vacío si no existe
-#     Solo necesitamos el archivo físico para que artisan key:generate
-#     pueda escribir la APP_KEY. El resto de variables (DB, etc.) las
-#     inyecta Azure en runtime desde App Settings.
+# 1b. Crear .env con APP_KEY= si no existe
+#     artisan key:generate necesita el string "APP_KEY=" literal en el
+#     archivo para poder reemplazarlo. touch no sirve (archivo vacío falla).
+#     El resto de variables (DB, etc.) las inyecta Azure desde App Settings.
 # =============================================================================
 if [ ! -f /home/site/wwwroot/.env ]; then
-    echo ">>> .env no encontrado → creando archivo vacío..."
-    touch /home/site/wwwroot/.env
+    echo ">>> .env no encontrado → creando con APP_KEY=..."
+    echo "APP_KEY=" > /home/site/wwwroot/.env
 fi
 
 # =============================================================================
@@ -94,7 +94,15 @@ if [ -z "$APP_KEY" ] || [ "$APP_KEY" = "None" ]; then
 fi
 
 # =============================================================================
-# 3-5. Cache de Laravel
+# 3. Recrear estructura de storage (GitHub no sube directorios vacíos)
+# =============================================================================
+echo ">>> Creando estructura storage/framework..."
+mkdir -p /home/site/wwwroot/storage/framework/{sessions,views,cache}
+mkdir -p /home/site/wwwroot/storage/logs
+chmod -R 775 /home/site/wwwroot/storage /home/site/wwwroot/bootstrap/cache
+
+# =============================================================================
+# 4-6. Cache de Laravel
 # =============================================================================
 echo ">>> Limpiando y cacheando config..."
 php artisan config:clear
