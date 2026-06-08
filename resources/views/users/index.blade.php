@@ -29,6 +29,43 @@
 
     @endif
 
+    @if(session('error'))
+
+        <div class="alert alert-danger">
+
+            {{ session('error') }}
+
+        </div>
+
+    @endif
+
+    {{-- Filtros de búsqueda --}}
+    <div class="card mb-3">
+        <div class="card-body">
+            <form method="GET" action="{{ route('users.index') }}" class="row g-2 align-items-end">
+                <div class="col-md-5">
+                    <label class="form-label">Buscar</label>
+                    <input type="text" name="search" class="form-control" placeholder="Nombre o email..."
+                           value="{{ request('search') }}">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Rol</label>
+                    <select name="role" class="form-select">
+                        <option value="">Todos</option>
+                        @foreach($roles as $role)
+                            <option value="{{ $role->id }}" {{ request('role') == $role->id ? 'selected' : '' }}>
+                                {{ $role->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary w-100">Filtrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <div class="card">
 
         <div class="card-body p-0">
@@ -125,7 +162,7 @@
                                     <button
                                         type="submit"
                                         class="btn btn-danger btn-sm"
-                                        onclick="return confirm('¿Eliminar usuario?')"
+                                        onclick="return confirm('¿Estás seguro de eliminar este usuario?')"
                                     >
                                         Eliminar
                                     </button>

@@ -13,29 +13,17 @@ class CarreraSeeder extends Seeder
      */
   public function run(): void
 {
-    Carrera::insert([
+    $carreras = [
+        ['codigo'=>'INF', 'nombre'=>'Ingeniería Informática', 'cupo'=>100, 'gestion'=>2026],
+        ['codigo'=>'SIS', 'nombre'=>'Ingeniería de Sistemas', 'cupo'=>80, 'gestion'=>2026],
+        ['codigo'=>'TEL', 'nombre'=>'Ingeniería Telecomunicaciones', 'cupo'=>60, 'gestion'=>2026],
+    ];
 
-        [
-            'codigo'=>'INF',
-            'nombre'=>'Ingeniería Informática',
-            'cupo'=>100,
-            'gestion'=>2026
-        ],
-
-        [
-            'codigo'=>'SIS',
-            'nombre'=>'Ingeniería de Sistemas',
-            'cupo'=>80,
-            'gestion'=>2026
-        ],
-
-        [
-            'codigo'=>'TEL',
-            'nombre'=>'Ingeniería Telecomunicaciones',
-            'cupo'=>60,
-            'gestion'=>2026
-        ]
-
-    ]);
+    foreach ($carreras as $carrera) {
+        Carrera::updateOrCreate(
+            ['codigo' => $carrera['codigo']],
+            $carrera
+        );
+    }
 }
 }

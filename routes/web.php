@@ -127,7 +127,7 @@ Route::middleware('auth')->group(function(){
     Route::resource(
         'users',
         UserController::class
-    );
+    )->middleware('admin');
 
     /*
     CRUD Carreras

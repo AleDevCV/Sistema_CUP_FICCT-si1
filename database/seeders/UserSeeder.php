@@ -9,7 +9,7 @@ class UserSeeder extends Seeder
 {
     public function run(): void
     {
-        User::insert([
+        $users = [
             [
                 'role_id'    => 1,
                 'name'       => 'Administrador',
@@ -17,8 +17,6 @@ class UserSeeder extends Seeder
                 'email'      => 'admin@gmail.com',
                 'password'   => bcrypt('12345678'),
                 'status'     => true,
-                'created_at' => now(),
-                'updated_at' => now(),
             ],
             [
                 'role_id'    => 2,
@@ -27,9 +25,14 @@ class UserSeeder extends Seeder
                 'email'      => 'docente@gmail.com',
                 'password'   => bcrypt('12345678'),
                 'status'     => true,
-                'created_at' => now(),
-                'updated_at' => now(),
             ],
-        ]);
+        ];
+
+        foreach ($users as $user) {
+            User::updateOrCreate(
+                ['username' => $user['username']],
+                $user
+            );
+        }
     }
 }

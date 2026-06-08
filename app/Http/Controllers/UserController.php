@@ -14,15 +14,28 @@ class UserController extends Controller
     LISTAR USUARIOS
     =========================================
     */
-    public function index()
+    public function index(Request $request)
     {
         $users = User::with('role')
+            ->when($request->filled('search'), function ($q) use ($request) {
+                $term = $request->search;
+                $q->where(function ($sub) use ($term) {
+                    $sub->where('name', 'ilike', "%{$term}%")
+                       ->orWhere('email', 'ilike', "%{$term}%");
+                });
+            })
+            ->when($request->filled('role'), function ($q) use ($request) {
+                $q->where('role_id', $request->role);
+            })
             ->latest()
-            ->paginate(10);
+            ->paginate(10)
+            ->appends($request->only(['search', 'role']));
+
+        $roles = Role::all();
 
         return view(
             'users.index',
-            compact('users')
+            compact('users', 'roles')
         );
     }
 
@@ -171,6 +184,13 @@ class UserController extends Controller
             );
         }
 
+        /*
+        Proteger auto-desactivación y auto-cambio de rol
+        */
+        if (auth()->id() == $user->id) {
+            unset($validated['status'], $validated['role_id']);
+        }
+
         $user->update($validated);
 
         return redirect()
@@ -188,6 +208,14 @@ class UserController extends Controller
     */
     public function destroy(User $user)
     {
+        if (auth()->id() == $user->id) {
+            return back()->with('error', 'No puedes eliminar tu propio usuario.');
+        }
+
+        if ($user->role_id == 1 && User::where('role_id', 1)->count() <= 1) {
+            return back()->with('error', 'No puedes eliminar al último administrador del sistema.');
+        }
+
         $user->delete();
 
         return redirect()

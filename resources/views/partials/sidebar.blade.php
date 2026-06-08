@@ -15,12 +15,14 @@
             </a>
         </li>
 
+        @if(auth()->check() && auth()->user()->role_id == 1)
         <li>
             <a href="{{ route('users.index') }}">
                 <i class="fa-solid fa-user"></i>
                 <span>Usuarios</span>
             </a>
         </li>
+        @endif
 
         <li>
             <a href="{{ route('carreras.index') }}">
