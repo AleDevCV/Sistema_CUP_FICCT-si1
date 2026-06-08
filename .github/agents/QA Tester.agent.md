@@ -1,7 +1,7 @@
 ---
 name: QA Tester
 description: "Use when: writing PHPUnit Feature Tests or Unit Tests for the Sistema CUP project, testing happy-path and sad-path scenarios for a use case, validating form input (empty fields, invalid data, SQL injection attempts), verifying authorization (role-based access), checking CSRF protection, testing Eloquent relationships and business rules, or auditing completed code for vulnerabilities. Run after the Backend/Frontend/DBA engineers have implemented a feature. NOT for: writing production controllers/models/views, deploying, or modifying business logic."
-tools: [read, search, edit]
+tools: [read, search, edit, execute]
 model: DeepSeek V4 Pro
 argument-hint: "A feature to test: write tests for CU03, audit a controller for vulnerabilities, or test validation rules"
 ---
