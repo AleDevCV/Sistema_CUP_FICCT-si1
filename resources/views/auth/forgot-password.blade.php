@@ -1,3 +1,5 @@
+{{-- resources/views/auth/forgot-password.blade.php --}}
+{{-- Formulario para solicitar enlace de recuperación de contraseña --}}
 <!DOCTYPE html>
 <html lang="es">
 
@@ -6,7 +8,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Login CUP</title>
+<title>Recuperar Contraseña - CUP</title>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -22,7 +24,7 @@ body {
     align-items: center;
 }
 
-/* CARD LOGIN */
+/* CARD */
 .login-card {
     width: 100%;
     max-width: 420px;
@@ -39,8 +41,15 @@ body {
     text-align: center;
     font-size: 24px;
     font-weight: bold;
-    margin-bottom: 25px;
+    margin-bottom: 8px;
     color: #0f172a;
+}
+
+.login-subtitle {
+    text-align: center;
+    font-size: 14px;
+    color: #64748b;
+    margin-bottom: 25px;
 }
 
 /* INPUTS */
@@ -70,11 +79,6 @@ body {
     transform: translateY(-2px);
 }
 
-/* ERROR */
-.text-danger {
-    font-size: 13px;
-}
-
 /* ANIMATION */
 @keyframes fadeIn {
     from {opacity: 0; transform: translateY(20px);}
@@ -90,10 +94,20 @@ body {
 <div class="login-card">
 
     <div class="login-title">
-        Sistema CUP
+        Recuperar Contraseña
     </div>
 
-    <form method="POST" action="/login">
+    <p class="login-subtitle">
+        Ingresa tu correo electrónico y te enviaremos un enlace para restablecer tu contraseña.
+    </p>
+
+    @if (session('status'))
+        <div class="alert alert-success">
+            {{ session('status') }}
+        </div>
+    @endif
+
+    <form method="POST" action="{{ route('password.email') }}">
 
         @csrf
 
@@ -103,38 +117,30 @@ body {
 
             <input type="email"
                    name="email"
-                   class="form-control"
+                   class="form-control @error('email') is-invalid @enderror"
+                   placeholder="tucorreo@ejemplo.com"
                    value="{{ old('email') }}"
                    required>
 
             @error('email')
-                <span class="text-danger">{{ $message }}</span>
+                <div class="alert alert-danger mt-2 mb-0 py-2">
+                    {{ $message }}
+                </div>
             @enderror
 
         </div>
 
-        <div class="mb-3">
-
-            <label class="form-label">Contraseña</label>
-
-            <input type="password"
-                   name="password"
-                   class="form-control"
-                   required>
-
-        </div>
-
-        <button class="btn btn-login w-100 text-white">
-            Ingresar
+        <button type="submit" class="btn btn-login w-100 text-white">
+            Enviar enlace de recuperación
         </button>
 
-        <div class="text-center mt-3">
-            <a href="{{ route('password.request') }}" style="text-decoration: none; color: #2563eb;">
-                ¿Olvidaste tu contraseña?
-            </a>
-        </div>
-
     </form>
+
+    <div class="text-center mt-3">
+        <a href="{{ route('login') }}" style="text-decoration: none; color: #2563eb;">
+            Volver al inicio de sesión
+        </a>
+    </div>
 
 </div>
 
