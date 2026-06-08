@@ -22,3 +22,4 @@ arbol_proyecto.txt
 zDocumentacion
 zPlan_completo_despliegue-azure.md
 z_msj_advertencia_Supabase.md
+.env.produccion

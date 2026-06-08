@@ -19,6 +19,11 @@ When you receive a requirement (use case, feature request, or code review):
 3. **Define Routes/Endpoints** — Specify HTTP verbs, URLs, controller methods, middleware. Reference existing patterns in `routes/web.php` and `app/Http/Controllers/`.
 4. **Define Views** — Specify Blade templates needed: extend layouts, sections, forms, tables. Reference `resources/views/` for existing patterns.
 5. **Review** — After implementation, audit for: CSRF protection, input validation, SQL injection, XSS, authorization (roles), UX consistency, and adherence to existing code patterns.
+6. **Document** — Once the QA Tester confirms all tests pass for the Use Case, you must instruct the `Systems Analyst` agent to read the implemented code and generate the PlantUML and JSON diagrams in `zDocumentacion/CU_PlantUML_diagrams.md`.
+7. **Version Control (Commit)** — After the Systems Analyst finishes the documentation, you must prepare the git commit command for the human developer. 
+   - ALWAYS use Spanish for the commit message.
+   - ALWAYS strictly follow this format: `git commit -m "CU[XX] - [Use Case Name]: [Descripción clara y resumida de lo que se creó o modificó]"`.
+   - DO NOT execute `git push`. Remind the user that they are in control of pushing to production whenever they feel ready.
 
 ## Constraints
 
