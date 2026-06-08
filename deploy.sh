@@ -15,7 +15,8 @@ NGINX_CONF_DIR="/etc/nginx/conf.d"
 
 # 0a. Detectar el socket PHP-FPM que usa Azure en este contenedor
 #     Buscar en cualquier archivo .conf existente; si no hay, usar TCP por defecto
-PHP_SOCKET=$(grep -rhoP 'fastcgi_pass\s+\K\S+' /etc/nginx/ 2>/dev/null | head -1)
+#     tr -d ';' evita el doble ;; que rompe la sintaxis de nginx
+PHP_SOCKET=$(grep -rhoP 'fastcgi_pass\s+\K\S+' /etc/nginx/ 2>/dev/null | head -1 | tr -d ';')
 if [ -z "$PHP_SOCKET" ]; then
     PHP_SOCKET="127.0.0.1:9000"
     echo "[Nginx] Socket PHP-FPM no detectado → usando $PHP_SOCKET"
@@ -72,6 +73,16 @@ echo ""
 #    NO ejecutar aquí: el contenedor de Azure no tiene composer instalado
 # =============================================================================
 echo ">>> [SKIP] Composer — vendor/ ya viene compilado desde CI/CD"
+
+# =============================================================================
+# 1b. Crear .env desde .env.example si no existe
+#     GitHub Actions no sube .env (está en .gitignore),
+#     pero Azure inyecta las variables reales en runtime vía App Settings
+# =============================================================================
+if [ ! -f /home/site/wwwroot/.env ]; then
+    echo ">>> .env no encontrado → copiando desde .env.example..."
+    cp /home/site/wwwroot/.env.example /home/site/wwwroot/.env
+fi
 
 # =============================================================================
 # 2. Generar APP_KEY si no existe
