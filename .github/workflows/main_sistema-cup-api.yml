@@ -1,6 +1,3 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-
 name: Build and deploy PHP app to Azure Web App - sistema-cup-api
 
 on:
@@ -12,59 +9,79 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read #This is required for actions/checkout
 
     steps:
       - uses: actions/checkout@v4
 
+      # ─────────────────────────────────────────────────
+      # Node.js (IMPRESCINDIBLE para Vite)
+      # ─────────────────────────────────────────────────
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Instalar dependencias npm
+        run: npm ci
+
+      - name: Compilar assets con Vite
+        run: npm run build
+      # ─────────────────────────────────────────────────
+
+      # ─────────────────────────────────────────────────
+      # PHP / Composer
+      # ─────────────────────────────────────────────────
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
+          extensions: mbstring, pdo_pgsql, bcmath, ctype, fileinfo, json, tokenizer, xml
 
-      - name: Check if composer.json exists
-        id: check_files
-        uses: andstor/file-existence-action@v1
-        with:
-          files: 'composer.json'
+      - name: Validar composer.json
+        id: composer-check
+        run: |
+          if [ -f "composer.json" ]; then
+            echo "CI=true" >> $GITHUB_OUTPUT
+          fi
 
-      - name: Run composer install if composer.json exists
-        if: steps.check_files.outputs.files_exists == 'true'
-        run: composer validate --no-check-publish && composer install --prefer-dist --no-progress
+      - name: Composer install
+        run: composer install --no-dev --optimize-autoloader
+      # ─────────────────────────────────────────────────
 
-
+      # ─────────────────────────────────────────────────
+      # Empaquetar artefacto
+      # ─────────────────────────────────────────────────
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: php-app
-          path: .
+          path: |
+            .
+            !node_modules/
+            !.git/
 
+  # ───────────────────────────────────────────────────
+  # Deploy a Azure
+  # ───────────────────────────────────────────────────
   deploy:
     runs-on: ubuntu-latest
     needs: build
-    permissions:
-      id-token: write #This is required for requesting the JWT
-      contents: read #This is required for actions/checkout
+    environment:
+      name: 'Production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v4
         with:
           name: php-app
-      
-      - name: Login to Azure
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_64018B5B47C34C5C845677DB2E39A07D }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_14958AC5753B4EB3909E9C915CF5C506 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_6AD506AB3EAF4E32A188FC07C87B28A6 }}
 
-      - name: 'Deploy to Azure Web App'
-        uses: azure/webapps-deploy@v3
+      - name: Deploy to Azure Web App
         id: deploy-to-webapp
+        uses: azure/webapps-deploy@v3
         with:
           app-name: 'sistema-cup-api'
           slot-name: 'Production'
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
           package: .
-          
