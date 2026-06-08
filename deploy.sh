@@ -75,13 +75,14 @@ echo ""
 echo ">>> [SKIP] Composer — vendor/ ya viene compilado desde CI/CD"
 
 # =============================================================================
-# 1b. Crear .env desde .env.example si no existe
-#     GitHub Actions no sube .env (está en .gitignore),
-#     pero Azure inyecta las variables reales en runtime vía App Settings
+# 1b. Crear .env vacío si no existe
+#     Solo necesitamos el archivo físico para que artisan key:generate
+#     pueda escribir la APP_KEY. El resto de variables (DB, etc.) las
+#     inyecta Azure en runtime desde App Settings.
 # =============================================================================
 if [ ! -f /home/site/wwwroot/.env ]; then
-    echo ">>> .env no encontrado → copiando desde .env.example..."
-    cp /home/site/wwwroot/.env.example /home/site/wwwroot/.env
+    echo ">>> .env no encontrado → creando archivo vacío..."
+    touch /home/site/wwwroot/.env
 fi
 
 # =============================================================================
