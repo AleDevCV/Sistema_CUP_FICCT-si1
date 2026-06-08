@@ -6,35 +6,65 @@ set -e
 echo "=== [deploy.sh] Iniciando post-deploy ==="
 
 # =============================================================================
-# 0. Configurar Nginx para Laravel (try_files + public/)
+# 0. Configurar Nginx para Laravel (Bulletproof — sobrescribe todo)
 # =============================================================================
 echo ">>> Configurando Nginx para Laravel..."
 
-# Azure App Service Linux PHP 8.2 usa /etc/nginx/conf.d/default.conf
-# NO usa sites-available (estructura Debian/Ubuntu clásica)
 NGINX_CONF="/etc/nginx/conf.d/default.conf"
+NGINX_CONF_DIR="/etc/nginx/conf.d"
 
-if [ -f "$NGINX_CONF" ]; then
-
-    # 0a. Respaldar original
-    cp "$NGINX_CONF" "${NGINX_CONF}.bak"
-
-    # 0b. Cambiar root: /home/site/wwwroot → /home/site/wwwroot/public
-    sed -i "s|root /home/site/wwwroot;|root /home/site/wwwroot/public;|g" "$NGINX_CONF"
-    sed -i "s|root /home/site/wwwroot |root /home/site/wwwroot/public |g" "$NGINX_CONF"
-
-    # 0c. Inyectar try_files dentro del bloque location / { ... }
-    sed -i '/location \/ {/a \        try_files $uri $uri/ /index.php?$query_string;' "$NGINX_CONF"
-
-    echo "[Nginx] Configuración aplicada: root → public/ + try_files agregado"
-
+# 0a. Detectar el socket PHP-FPM que usa Azure en este contenedor
+#     Buscar en cualquier archivo .conf existente; si no hay, usar TCP por defecto
+PHP_SOCKET=$(grep -rhoP 'fastcgi_pass\s+\K\S+' /etc/nginx/ 2>/dev/null | head -1)
+if [ -z "$PHP_SOCKET" ]; then
+    PHP_SOCKET="127.0.0.1:9000"
+    echo "[Nginx] Socket PHP-FPM no detectado → usando $PHP_SOCKET"
 else
-    echo "[Nginx] ERROR: No se encontró $NGINX_CONF. Abortando."
-    exit 1
+    echo "[Nginx] Socket PHP-FPM detectado: $PHP_SOCKET"
 fi
 
+# 0b. Asegurar que el directorio conf.d existe
+mkdir -p "$NGINX_CONF_DIR"
+
+# 0c. Sobrescribir con configuración completa y limpia para Laravel
+cat > "$NGINX_CONF" << NGINXEOF
+server {
+    listen 8080;
+    listen [::]:8080;
+    server_name _;
+
+    root /home/site/wwwroot/public;
+    index index.php index.html index.htm;
+
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Content-Type-Options "nosniff" always;
+
+    location / {
+        try_files \$uri \$uri/ /index.php?\$query_string;
+    }
+
+    location ~ \.php\$ {
+        fastcgi_pass $PHP_SOCKET;
+        fastcgi_index index.php;
+        fastcgi_param SCRIPT_FILENAME \$realpath_root\$fastcgi_script_name;
+        include fastcgi_params;
+    }
+
+    location ~ /\.ht {
+        deny all;
+    }
+
+    # Denegar acceso a archivos sensibles de Laravel
+    location ~ /\.(?!well-known).* {
+        deny all;
+    }
+}
+NGINXEOF
+
+echo "[Nginx] Configuración Laravel escrita en $NGINX_CONF"
+
 # 0d. Verificar sintaxis y recargar
-nginx -t 2>&1 && service nginx reload 2>&1 || echo "[Nginx] ERROR al validar/recargar configuración"
+nginx -t 2>&1 && service nginx reload 2>&1 || echo "[Nginx] ERROR al validar/recargar"
 echo ""
 
 # =============================================================================
