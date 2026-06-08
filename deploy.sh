@@ -10,7 +10,9 @@ echo "=== [deploy.sh] Iniciando post-deploy ==="
 # =============================================================================
 echo ">>> Configurando Nginx para Laravel..."
 
-NGINX_CONF="/etc/nginx/sites-available/default"
+# Azure App Service Linux PHP 8.2 usa /etc/nginx/conf.d/default.conf
+# NO usa sites-available (estructura Debian/Ubuntu clásica)
+NGINX_CONF="/etc/nginx/conf.d/default.conf"
 
 if [ -f "$NGINX_CONF" ]; then
 
@@ -22,41 +24,13 @@ if [ -f "$NGINX_CONF" ]; then
     sed -i "s|root /home/site/wwwroot |root /home/site/wwwroot/public |g" "$NGINX_CONF"
 
     # 0c. Inyectar try_files dentro del bloque location / { ... }
-    # Busca 'location / {' y agrega try_files en la siguiente línea
     sed -i '/location \/ {/a \        try_files $uri $uri/ /index.php?$query_string;' "$NGINX_CONF"
 
     echo "[Nginx] Configuración aplicada: root → public/ + try_files agregado"
 
 else
-    echo "[Nginx] ADVERTENCIA: No se encontró $NGINX_CONF. Creando configuración mínima..."
-
-    cat > "$NGINX_CONF" << 'NGINXEOF'
-server {
-    listen 8080;
-    listen [::]:8080;
-    root /home/site/wwwroot/public;
-    index index.php index.html index.htm;
-    server_name _;
-
-    add_header X-Frame-Options "SAMEORIGIN";
-    add_header X-Content-Type-Options "nosniff";
-
-    location / {
-        try_files $uri $uri/ /index.php?$query_string;
-    }
-
-    location ~ \.php$ {
-        fastcgi_pass unix:/var/run/php/php-fpm.sock;
-        fastcgi_index index.php;
-        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
-        include fastcgi_params;
-    }
-
-    location ~ /\.ht {
-        deny all;
-    }
-}
-NGINXEOF
+    echo "[Nginx] ERROR: No se encontró $NGINX_CONF. Abortando."
+    exit 1
 fi
 
 # 0d. Verificar sintaxis y recargar
