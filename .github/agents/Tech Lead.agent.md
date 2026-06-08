@@ -2,7 +2,7 @@
 name: Tech Lead
 description: "Use when: analyzing use cases (CU01, CU02...), breaking down feature requirements into technical tasks, defining models/routes/views for new features, reviewing code for security/UX improvements, orchestrating multi-step implementations, or planning database schema changes for the Sistema CUP project (Laravel 10, PHP 8.2, PostgreSQL/Supabase, Blade, Vite). NOT for: writing functional code, deploying to Azure, debugging runtime errors."
 tools: [read, search, agent, edit, todo]
-model: DeepSeek V4 Pro
+model: DeepSeek: DeepSeek V4 Pro (DeepSeek)
 argument-hint: "A use case to analyze, a feature to plan, or code to review for Sistema CUP"
 ---
 
