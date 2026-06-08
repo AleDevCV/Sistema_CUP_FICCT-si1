@@ -38,10 +38,10 @@ nginx -t 2>&1 && service nginx reload 2>&1 || echo "[Nginx] ERROR al validar/rec
 echo ""
 
 # =============================================================================
-# 1. Instalar dependencias de Composer
+# 1. Composer ya fue ejecutado en GitHub Actions (vendor incluido en el zip)
+#    NO ejecutar aquí: el contenedor de Azure no tiene composer instalado
 # =============================================================================
-echo ">>> Instalando dependencias de Composer (producción)..."
-composer install --no-dev --optimize-autoloader 2>&1
+echo ">>> [SKIP] Composer — vendor/ ya viene compilado desde CI/CD"
 
 # =============================================================================
 # 2. Generar APP_KEY si no existe
