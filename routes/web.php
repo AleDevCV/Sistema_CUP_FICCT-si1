@@ -7,6 +7,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\CarreraController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PostulanteController;
+use App\Http\Controllers\PagoController;
 use App\Http\Controllers\MateriaController;
 use App\Http\Controllers\ExamenController;
 use App\Http\Controllers\DocenteController;
@@ -102,6 +103,20 @@ Route::post('/registro', [App\Http\Controllers\PostulanteController::class, 'sto
 
 /*
 |--------------------------------------------------------------------------
+| Webhook de pagos (Stripe) — sin CSRF
+|--------------------------------------------------------------------------
+*/
+
+Route::post('/pagos/webhook', [PagoController::class, 'handleWebhook'])
+    ->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+
+Route::post('/pagos/checkout', [PagoController::class, 'createCheckoutSession'])
+    ->middleware('auth')
+    ->name('pagos.checkout');
+
+
+/*
+|--------------------------------------------------------------------------
 | Rutas protegidas
 |--------------------------------------------------------------------------
 */
@@ -178,7 +193,13 @@ Route::resource(
 Route::resource(
     'examenes',
     ExamenController::class
-);
+)->only(['index', 'show']);
+
+Route::resource(
+    'examenes',
+    ExamenController::class
+)->only(['create', 'store', 'edit', 'update', 'destroy'])
+->middleware('role:Administrador|Coordinador');
 Route::resource(
     'docentes',
     DocenteController::class

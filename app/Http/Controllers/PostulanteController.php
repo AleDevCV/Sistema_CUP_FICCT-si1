@@ -19,15 +19,19 @@ class PostulanteController extends Controller
 
     public function index()
     {
-        $postulantes = Postulante::with([
+        $query = Postulante::with([
 
             'primeraCarrera',
             'segundaCarrera',
             'grupo'
 
-        ])
-        ->latest()
-        ->paginate(10);
+        ]);
+
+        if (request('estado')) {
+            $query->where('estado_final', request('estado'));
+        }
+
+        $postulantes = $query->latest()->paginate(10);
 
         return view(
             'postulantes.index',
@@ -241,7 +245,7 @@ class PostulanteController extends Controller
             'nullable|max:100',
 
             'estado' =>
-            'required|boolean'
+            'nullable|boolean'
 
         ]);
 

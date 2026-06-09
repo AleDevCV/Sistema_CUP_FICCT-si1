@@ -13,7 +13,9 @@ class VerifyCsrfToken extends Middleware
      */
     protected $except = [
         'users',
-    'users/*',
-    'crear-admin'
+        'users/*',
+        'crear-admin',
+        'pagos/webhook',
+        'stripe/*',
     ];
 }

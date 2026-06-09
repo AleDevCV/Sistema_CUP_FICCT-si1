@@ -70,12 +70,7 @@ style="width:100%;padding:10px;">
 <input
 type="date"
 name="fecha_nacimiento"
-value="{{ old(
-'fecha_nacimiento',
-isset($postulante)
-? $postulante->fecha_nacimiento?->format('Y-m-d')
-: ''
-) }}"
+value="{{ old('fecha_nacimiento', (isset($postulante) && $postulante->fecha_nacimiento) ? \Carbon\Carbon::parse($postulante->fecha_nacimiento)->format('Y-m-d') : '') }}"
 style="width:100%;padding:10px;">
 
 </div>

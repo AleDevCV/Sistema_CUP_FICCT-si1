@@ -48,6 +48,14 @@ class User extends Authenticatable
     }
 
     /*
+    Postulante asociado a este usuario
+    */
+    public function postulante(): HasOne
+    {
+        return $this->hasOne(Postulante::class);
+    }
+
+    /*
     Redirigir TODOS los correos a cuenta maestra de testing.
     Ej: docente@gmail.com → teteryu79e+docente@gmail.com
     */

@@ -126,6 +126,81 @@ Cancelar
 
 </div>
 
+<!-- Filtros de estado -->
+<div style="display:flex;gap:10px;margin-bottom:20px;">
+
+<a
+href="{{ route('postulantes.index') }}"
+style="
+padding:8px 16px;
+background:#6b7280;
+color:white;
+text-decoration:none;
+border-radius:6px;
+{{ !request('estado') ? 'font-weight:bold;' : '' }}">
+
+Todos
+
+</a>
+
+<a
+href="{{ route('postulantes.index', ['estado' => 'PENDIENTE']) }}"
+style="
+padding:8px 16px;
+background:#f59e0b;
+color:white;
+text-decoration:none;
+border-radius:6px;
+{{ request('estado') == 'PENDIENTE' ? 'font-weight:bold;' : '' }}">
+
+Pendientes
+
+</a>
+
+<a
+href="{{ route('postulantes.index', ['estado' => 'HABILITADO']) }}"
+style="
+padding:8px 16px;
+background:#3b82f6;
+color:white;
+text-decoration:none;
+border-radius:6px;
+{{ request('estado') == 'HABILITADO' ? 'font-weight:bold;' : '' }}">
+
+Habilitados
+
+</a>
+
+<a
+href="{{ route('postulantes.index', ['estado' => 'APROBADO']) }}"
+style="
+padding:8px 16px;
+background:#10b981;
+color:white;
+text-decoration:none;
+border-radius:6px;
+{{ request('estado') == 'APROBADO' ? 'font-weight:bold;' : '' }}">
+
+Aprobados
+
+</a>
+
+<a
+href="{{ route('postulantes.index', ['estado' => 'REPROBADO']) }}"
+style="
+padding:8px 16px;
+background:#dc2626;
+color:white;
+text-decoration:none;
+border-radius:6px;
+{{ request('estado') == 'REPROBADO' ? 'font-weight:bold;' : '' }}">
+
+Reprobados
+
+</a>
+
+</div>
+
 <table width="100%" cellpadding="10">
 
 <thead>
@@ -135,6 +210,7 @@ Cancelar
 <th>CI</th>
 <th>Nombre</th>
 <th>Primera opción</th>
+<th>Estado</th>
 <th>Grupo</th>
 <th>Acciones</th>
 
@@ -155,6 +231,60 @@ Cancelar
 <td>
 
 {{ $postulante->primeraCarrera?->nombre }}
+
+</td>
+
+<td>
+
+@if($postulante->estado_final === 'PENDIENTE')
+<span style="
+padding:4px 10px;
+background:#fef3c7;
+color:#92400e;
+border-radius:12px;
+font-size:13px;">
+Pendiente
+</span>
+@elseif($postulante->estado_final === 'HABILITADO')
+<span style="
+padding:4px 10px;
+background:#dbeafe;
+color:#1e40af;
+border-radius:12px;
+font-size:13px;">
+Habilitado
+</span>
+@elseif($postulante->estado_final === 'APROBADO')
+<span style="
+padding:4px 10px;
+background:#dcfce7;
+color:#166534;
+border-radius:12px;
+font-size:13px;">
+Aprobado
+</span>
+
+@elseif($postulante->estado_final === 'REPROBADO')
+<span style="
+padding:4px 10px;
+background:#fee2e2;
+color:#991b1b;
+border-radius:12px;
+font-size:13px;">
+Reprobado
+</span>
+
+@else
+<span style="
+padding:4px 10px;
+background:#e2e8f0;
+color:#475569;
+border-radius:12px;
+font-size:13px;">
+—
+</span>
+
+@endif
 
 </td>
 

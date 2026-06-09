@@ -28,6 +28,20 @@ class Pago extends Model
         ];
     }
 
+    /**
+     * Disparador automático: al aprobar pago, habilita al postulante.
+     * El Webhook ahora actualiza al postulante explícitamente.
+     * Se deja como respaldo.
+     */
+    protected static function booted(): void
+    {
+        static::saved(function (Pago $pago) {
+            if ($pago->estado === 'PAGADO' && $pago->postulante && $pago->postulante->estado_final !== 'HABILITADO') {
+                $pago->postulante->update(['estado_final' => 'HABILITADO']);
+            }
+        });
+    }
+
     /*
     Un pago pertenece a un postulante
     */

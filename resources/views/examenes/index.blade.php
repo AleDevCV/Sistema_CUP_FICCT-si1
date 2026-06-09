@@ -19,6 +19,7 @@ Lista de Exámenes
 
 </h2>
 
+@hasanyrole('Administrador|Coordinador')
 <a
 href="{{ route('examenes.create') }}"
 style="
@@ -31,6 +32,7 @@ border-radius:8px;">
 Nuevo Examen
 
 </a>
+@endhasanyrole
 
 </div>
 
