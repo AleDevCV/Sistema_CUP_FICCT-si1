@@ -7,7 +7,6 @@ use App\Models\Postulante;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
 
 class AsignacionGrupoController extends Controller
 {
@@ -59,6 +58,8 @@ class AsignacionGrupoController extends Controller
             $asignados = 0;
             $grupoActual = null;
 
+            $correlativo = Grupo::where('codigo', 'like', 'AUTO-%')->count() + 1;
+
             foreach ($postulantes as $postulante) {
                 // Buscar grupo activo con cupo
                 if (!$grupoActual || !$grupoActual->tieneCupo()) {
@@ -68,12 +69,18 @@ class AsignacionGrupoController extends Controller
 
                     // Si no hay grupo con cupo, crear uno nuevo
                     if (!$grupoActual) {
+                        $dias = ['Lun-Mie-Vie', 'Mar-Jue'][array_rand(['Lun-Mie-Vie', 'Mar-Jue'])];
+                        $horaInicio = rand(7, 18);
+
                         $grupoActual = Grupo::create([
-                            'nombre'           => 'Grupo Automático ' . Str::upper(Str::random(3)),
-                            'codigo'           => 'AUTO-' . Str::upper(Str::random(4)),
+                            'nombre'           => 'Grupo ' . str_pad($correlativo, 2, '0', STR_PAD_LEFT),
+                            'codigo'           => 'AUTO-' . str_pad($correlativo, 2, '0', STR_PAD_LEFT),
+                            'aula'             => 'LAB-' . rand(10, 46),
+                            'horario'          => sprintf('%s %02d:00 - %02d:00', $dias, $horaInicio, $horaInicio + 2),
                             'capacidad_maxima' => 70,
                             'estado'           => true,
                         ]);
+                        $correlativo++;
                         $gruposCreados++;
                     }
                 }

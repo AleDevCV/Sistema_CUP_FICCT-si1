@@ -148,6 +148,15 @@ Route::middleware('auth')->group(function(){
 
 
     /*
+    Panel del Postulante (CU16)
+    */
+
+    Route::get('/mi-panel', [App\Http\Controllers\PostulantePanelController::class, 'index'])
+        ->middleware('role:Postulante')
+        ->name('postulante.panel');
+
+
+    /*
     Dashboard
     */
 

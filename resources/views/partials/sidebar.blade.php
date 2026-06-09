@@ -22,6 +22,15 @@
             </a>
         </li>
 
+        @role('Postulante')
+        <li>
+            <a href="{{ route('postulante.panel') }}">
+                <i class="fa-solid fa-id-card"></i>
+                <span>Mi Panel Estudiantil</span>
+            </a>
+        </li>
+        @endrole
+
         @if(auth()->check() && auth()->user()->hasRole('Administrador'))
         <li>
             <a href="{{ route('users.index') }}">
