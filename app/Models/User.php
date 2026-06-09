@@ -7,12 +7,13 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Spatie\Permission\Traits\HasRoles;
+use App\Traits\Auditable;
 
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, CanResetPassword, HasRoles;
+    use HasFactory, Notifiable, CanResetPassword, HasRoles, Auditable;
 
     protected $fillable = [
 

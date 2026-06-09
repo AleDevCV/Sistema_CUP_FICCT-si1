@@ -103,6 +103,15 @@
         </li>
         @endhasanyrole
 
+        @role('Administrador')
+        <li>
+            <a href="{{ route('auditorias.index') }}">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <span>Auditoría</span>
+            </a>
+        </li>
+        @endrole
+
     </ul>
 
 </div>

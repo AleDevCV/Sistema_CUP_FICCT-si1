@@ -13,6 +13,7 @@ use App\Http\Controllers\ExamenController;
 use App\Http\Controllers\DocenteController;
 use App\Http\Controllers\GrupoController;
 use App\Http\Controllers\GrupoDocenteController;
+use App\Http\Controllers\AuditoriaController;
 /*
 |--------------------------------------------------------------------------
 | Ruta principal
@@ -224,4 +225,8 @@ Route::resource(
     GrupoDocenteController::class
 )->except(['show', 'edit', 'update'])
 ->middleware('role:Administrador|Coordinador');
+
+Route::get('/auditoria', [AuditoriaController::class, 'index'])
+    ->middleware('role:Administrador')
+    ->name('auditorias.index');
 });
