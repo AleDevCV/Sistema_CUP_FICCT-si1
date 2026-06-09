@@ -294,4 +294,12 @@ Route::resource(
 Route::get('/auditoria', [AuditoriaController::class, 'index'])
     ->middleware('role:Administrador')
     ->name('auditorias.index');
+
+    /*
+    | Reportes Generales (CU18)
+    */
+
+    Route::get('/reportes/general', [App\Http\Controllers\ReporteController::class, 'index'])
+        ->middleware('role:Administrador|Coordinador|Autoridad')
+        ->name('reportes.general');
 });

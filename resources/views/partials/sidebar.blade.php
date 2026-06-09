@@ -146,6 +146,15 @@
         </li>
         @endrole
 
+        @hasanyrole('Administrador|Coordinador|Autoridad')
+        <li>
+            <a href="{{ route('reportes.general') }}">
+                <i class="fa-solid fa-file-alt"></i>
+                <span>Reportes Generales</span>
+            </a>
+        </li>
+        @endhasanyrole
+
         @role('Administrador')
         <li>
             <a href="{{ route('auditorias.index') }}">
