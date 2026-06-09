@@ -69,6 +69,15 @@
 
         @hasanyrole('Administrador|Coordinador')
         <li>
+            <a href="{{ route('cupos.index') }}">
+                <i class="fa-solid fa-layer-group"></i>
+                <span>Cupos</span>
+            </a>
+        </li>
+        @endhasanyrole
+
+        @hasanyrole('Administrador|Coordinador')
+        <li>
             <a href="{{ route('docentes.index') }}">
                 <i class="fa-solid fa-chalkboard-user"></i>
                 <span>Docentes</span>

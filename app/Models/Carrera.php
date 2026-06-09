@@ -47,4 +47,14 @@ class Carrera extends Model
     {
         return $this->belongsToMany(Materia::class);
     }
+
+    /*
+    Cantidad de postulantes HABILITADOS que eligieron esta carrera como primera opcion
+    */
+    public function inscritosHabilitadosCount(): int
+    {
+        return $this->postulantesPrimeraOpcion()
+            ->where('estado_final', 'HABILITADO')
+            ->count();
+    }
 }

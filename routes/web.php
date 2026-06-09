@@ -165,6 +165,15 @@ Route::middleware('auth')->group(function(){
         'carreras',
         CarreraController::class
     )->middleware('role:Administrador|Coordinador');
+
+    Route::get('/cupos', [CarreraController::class, 'cupos'])
+        ->middleware('role:Administrador|Coordinador')
+        ->name('cupos.index');
+
+    Route::patch('/cupos/{carrera}', [CarreraController::class, 'actualizarCupo'])
+        ->middleware('role:Administrador|Coordinador')
+        ->name('cupos.update');
+
     Route::resource(
     'roles',
     RoleController::class

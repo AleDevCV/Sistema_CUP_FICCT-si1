@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Carrera;
 use App\Models\Materia;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Controlador de Carreras — CU04.
@@ -131,7 +132,47 @@ class CarreraController extends Controller
 
 
     /**
-     * Elimina una carrera. cascadeOnDelete limpia autom\u00e1ticamente carrera_materia.
+     * Vista dedicada de cupos por carrera (CU08).
+     */
+    public function cupos()
+    {
+        $carreras = Carrera::orderBy('nombre')->get();
+
+        return view('carreras.cupos', compact('carreras'));
+    }
+
+    /**
+     * Actualizar cupo de una carrera con validacion de reduccion ilogica (CU08).
+     */
+    public function actualizarCupo(Request $request, Carrera $carrera)
+    {
+        $request->validate([
+            'cupo' => ['required', 'integer', 'min:0'],
+        ]);
+
+        $inscritos = $carrera->inscritosHabilitadosCount();
+
+        if ($request->cupo < $inscritos) {
+            return back()->withErrors([
+                'cupo' => "No se puede reducir el cupo a {$request->cupo}. Ya hay {$inscritos} postulantes habilitados en {$carrera->nombre}."
+            ]);
+        }
+
+        $carrera->update(['cupo' => $request->cupo]);
+
+        Log::info('CU08: Cupo actualizado', [
+            'user_id'     => auth()->id(),
+            'carrera_id'  => $carrera->id,
+            'carrera'     => $carrera->nombre,
+            'nuevo_cupo'  => $request->cupo,
+        ]);
+
+        return redirect()->route('cupos.index')
+            ->with('success', "Cupo de {$carrera->nombre} actualizado a {$request->cupo}.");
+    }
+
+    /**
+     * Elimina una carrera. cascadeOnDelete limpia automaticamente carrera_materia.
      *
      * @param  \App\Models\Carrera  $carrera
      * @return \Illuminate\Http\RedirectResponse
