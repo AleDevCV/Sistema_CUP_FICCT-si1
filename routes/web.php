@@ -12,6 +12,7 @@ use App\Http\Controllers\MateriaController;
 use App\Http\Controllers\ExamenController;
 use App\Http\Controllers\DocenteController;
 use App\Http\Controllers\GrupoController;
+use App\Http\Controllers\GrupoDocenteController;
 /*
 |--------------------------------------------------------------------------
 | Ruta principal
@@ -217,4 +218,10 @@ Route::resource(
     'grupos',
     GrupoController::class
 )->middleware('role:Administrador|Coordinador');
+
+Route::resource(
+    'asignaciones',
+    GrupoDocenteController::class
+)->except(['show', 'edit', 'update'])
+->middleware('role:Administrador|Coordinador');
 });

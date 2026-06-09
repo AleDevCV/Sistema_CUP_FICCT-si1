@@ -87,6 +87,15 @@
 
         @hasanyrole('Administrador|Coordinador')
         <li>
+            <a href="{{ route('asignaciones.index') }}">
+                <i class="fa-solid fa-link"></i>
+                <span>Asignaciones</span>
+            </a>
+        </li>
+        @endhasanyrole
+
+        @hasanyrole('Administrador|Coordinador')
+        <li>
             <a href="{{ route('grupos.index') }}">
                 <i class="fa-solid fa-users"></i>
                 <span>Grupos</span>

@@ -74,4 +74,12 @@ class Docente extends Model
         $this->diplomado_educacion_superior;
     }
 
+    /*
+    Carga horaria actual (CU09): cuantos grupos tiene asignados
+    */
+    public function cargaActual(): int
+    {
+        return $this->grupoDocentes()->count();
+    }
+
 }
