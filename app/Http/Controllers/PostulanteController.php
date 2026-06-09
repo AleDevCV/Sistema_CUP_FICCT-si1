@@ -23,6 +23,7 @@ class PostulanteController extends Controller
 
             'primeraCarrera',
             'segundaCarrera',
+            'carreraAdmitida',
             'grupo'
 
         ]);
@@ -384,6 +385,19 @@ class PostulanteController extends Controller
         return redirect()
             ->route('postulantes.historial')
             ->with('success', 'Importación revertida correctamente.');
+    }
+
+    /**
+     * HACK: Habilitar masivamente a todos los postulantes sin pasar por Stripe.
+     */
+    public function habilitarTodos()
+    {
+        $afectados = Postulante::where('estado_final', '!=', 'HABILITADO')
+            ->update(['estado_final' => 'HABILITADO']);
+
+        return redirect()
+            ->route('postulantes.index')
+            ->with('success', "¡HACK Exitoso! {$afectados} postulantes fueron habilitados masivamente para pruebas.");
     }
 
     private function getColegios()

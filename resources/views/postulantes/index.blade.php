@@ -59,6 +59,31 @@ Historial
 
 </a>
 
+@hasrole('Administrador')
+<form
+method="POST"
+action="{{ route('postulantes.habilitar_todos') }}"
+style="display:inline;"
+onsubmit="return confirm('¿Estás seguro de habilitar a todos masivamente sin pasar por Stripe?');">
+
+@csrf
+
+<button
+style="
+padding:10px;
+background:#ea580c;
+color:white;
+border:none;
+border-radius:8px;
+cursor:pointer;">
+
+HACK: Habilitar a Todos
+
+</button>
+
+</form>
+@endhasrole
+
 </div>
 
 </div>
@@ -210,6 +235,7 @@ Reprobados
 <th>CI</th>
 <th>Nombre</th>
 <th>Primera opción</th>
+<th>Adjudicación</th>
 <th>Estado</th>
 <th>Grupo</th>
 <th>Acciones</th>
@@ -231,6 +257,32 @@ Reprobados
 <td>
 
 {{ $postulante->primeraCarrera?->nombre }}
+
+</td>
+
+<td>
+
+@if($postulante->estado_final === 'REPROBADO')
+<span style="
+padding:4px 10px;
+background:#e2e8f0;
+color:#475569;
+border-radius:12px;
+font-size:13px;">
+No aplica (Reprobado)
+</span>
+@elseif($postulante->estado_final === 'Aprobado sin Cupo')
+<span style="
+padding:4px 10px;
+background:#fef3c7;
+color:#92400e;
+border-radius:12px;
+font-size:13px;">
+Sin cupo disponible
+</span>
+@else
+{{ $postulante->carreraAdmitida?->nombre ?? '—' }}
+@endif
 
 </td>
 
@@ -272,6 +324,16 @@ color:#991b1b;
 border-radius:12px;
 font-size:13px;">
 Reprobado
+</span>
+
+@elseif($postulante->estado_final === 'Aprobado sin Cupo')
+<span style="
+padding:4px 10px;
+background:#fef3c7;
+color:#92400e;
+border-radius:12px;
+font-size:13px;">
+Sin Cupo
 </span>
 
 @else

@@ -51,6 +51,26 @@
 </p>
 
 <p>
+<strong>Carrera Admitida:</strong>
+
+@if($postulante->estado_final === 'Aprobado sin Cupo')
+<span style="
+padding:4px 10px;
+background:#fef3c7;
+color:#92400e;
+border-radius:12px;
+font-size:13px;">
+Sin cupo disponible
+</span>
+@else
+<span style="color:#0891b2;font-weight:600;">
+{{ $postulante->carreraAdmitida?->nombre ?? 'Pendiente de asignación' }}
+</span>
+@endif
+
+</p>
+
+<p>
 <strong>Grupo:</strong>
 
 {{ $postulante->grupo?->nombre }}

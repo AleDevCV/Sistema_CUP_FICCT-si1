@@ -112,9 +112,27 @@
 
         @role('Administrador')
         <li>
+            <a href="{{ route('asignacion.index') }}">
+                <i class="fa-solid fa-people-arrows"></i>
+                <span>Asignación Automática</span>
+            </a>
+        </li>
+        @endrole
+
+        @role('Administrador')
+        <li>
             <a href="{{ route('cierre.index') }}">
                 <i class="fa-solid fa-lock"></i>
                 <span>Cierre Académico</span>
+            </a>
+        </li>
+        @endrole
+
+        @role('Administrador')
+        <li>
+            <a href="{{ route('reasignacion.index') }}">
+                <i class="fa-solid fa-trophy"></i>
+                <span>Reasignación de Cupos</span>
             </a>
         </li>
         @endrole

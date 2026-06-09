@@ -30,6 +30,7 @@ class Postulante extends Model
         'titulo_bachiller',
         'carrera_primera_opcion_id',
         'carrera_segunda_opcion_id',
+        'carrera_admitida_id',
         'grupo_id',
         'importacion_id',
         'promedio_final',
@@ -76,6 +77,17 @@ class Postulante extends Model
         return $this->belongsTo(
             Carrera::class,
             'carrera_segunda_opcion_id'
+        );
+    }
+
+    /*
+    Carrera finalmente admitida (asignada por CU15)
+    */
+    public function carreraAdmitida(): BelongsTo
+    {
+        return $this->belongsTo(
+            Carrera::class,
+            'carrera_admitida_id'
         );
     }
 

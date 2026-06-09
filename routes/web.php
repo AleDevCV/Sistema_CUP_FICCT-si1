@@ -174,6 +174,18 @@ Route::middleware('auth')->group(function(){
         ->middleware('role:Administrador')
         ->name('cierre.ejecutar');
 
+    /*
+    | Reasignación Automática de Cupos (CU15)
+    */
+
+    Route::get('/reasignacion-cupos', [App\Http\Controllers\ReasignacionCuposController::class, 'index'])
+        ->middleware('role:Administrador')
+        ->name('reasignacion.index');
+
+    Route::post('/reasignacion-cupos/ejecutar', [App\Http\Controllers\ReasignacionCuposController::class, 'ejecutar'])
+        ->middleware('role:Administrador')
+        ->name('reasignacion.ejecutar');
+
 
     /*
     CRUD Usuarios
@@ -205,6 +217,10 @@ Route::middleware('auth')->group(function(){
     'roles',
     RoleController::class
 )->middleware('admin');
+Route::post('/postulantes/habilitar-todos', [PostulanteController::class, 'habilitarTodos'])
+    ->middleware('role:Administrador')
+    ->name('postulantes.habilitar_todos');
+
 Route::post('/postulantes/importar', [PostulanteController::class, 'importarCsv'])
     ->middleware('role:Administrador|Coordinador')
     ->name('postulantes.importar');
@@ -247,10 +263,23 @@ Route::resource(
     'docentes',
     DocenteController::class
 )->middleware('role:Administrador|Coordinador');
+/*
+| Asignación Automática de Grupos (CU14)
+*/
+
+Route::get('/grupos/asignacion', [App\Http\Controllers\AsignacionGrupoController::class, 'index'])
+    ->middleware('role:Administrador')
+    ->name('asignacion.index');
+
+Route::post('/grupos/asignacion/ejecutar', [App\Http\Controllers\AsignacionGrupoController::class, 'ejecutar'])
+    ->middleware('role:Administrador')
+    ->name('asignacion.ejecutar');
+
 Route::resource(
     'grupos',
     GrupoController::class
 )->middleware('role:Administrador|Coordinador');
+
 
 Route::resource(
     'asignaciones',
