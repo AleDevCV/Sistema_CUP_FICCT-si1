@@ -65,12 +65,14 @@
             </a>
         </li>
 
+        @hasanyrole('Administrador|Coordinador')
         <li>
             <a href="{{ route('docentes.index') }}">
                 <i class="fa-solid fa-chalkboard-user"></i>
                 <span>Docentes</span>
             </a>
         </li>
+        @endhasanyrole
 
         <li>
             <a href="{{ route('grupos.index') }}">

@@ -52,7 +52,7 @@ margin-bottom:15px;">
 
 <th>ID</th>
 <th>Nombre</th>
-<th>Profesión</th>
+<th>Email</th>
 <th>Contratado</th>
 <th>Estado</th>
 <th>Acciones</th>
@@ -81,7 +81,7 @@ margin-bottom:15px;">
 
 <td>
 
-{{ $docente->profesion }}
+{{ $docente->user?->email }}
 
 </td>
 

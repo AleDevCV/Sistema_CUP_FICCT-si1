@@ -12,11 +12,7 @@ class Docente extends Model
 
         'user_id',
         'ci',
-        'nombres',
-        'apellidos',
         'telefono',
-        'email',
-        'profesion',
         'maestria',
         'diplomado_educacion_superior',
         'contratado',
@@ -59,12 +55,12 @@ class Docente extends Model
     }
 
     /*
-    Nombre completo
+    Nombre completo — delegado al modelo User
     */
 
-    public function getNombreCompletoAttribute()
+    public function getNombreCompletoAttribute(): string
     {
-        return "{$this->nombres} {$this->apellidos}";
+        return $this->user?->name ?? 'Sin usuario';
     }
 
     /*

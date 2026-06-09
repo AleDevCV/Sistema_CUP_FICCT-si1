@@ -71,64 +71,12 @@ style="width:100%;padding:10px;">
 
 <div>
 
-<label>Nombres *</label>
-
-<input
-type="text"
-name="nombres"
-value="{{ old('nombres',$docente->nombres ?? '') }}"
-style="width:100%;padding:10px;">
-
-</div>
-
-
-<div>
-
-<label>Apellidos *</label>
-
-<input
-type="text"
-name="apellidos"
-value="{{ old('apellidos',$docente->apellidos ?? '') }}"
-style="width:100%;padding:10px;">
-
-</div>
-
-
-<div>
-
 <label>Teléfono *</label>
 
 <input
 type="text"
 name="telefono"
 value="{{ old('telefono',$docente->telefono ?? '') }}"
-style="width:100%;padding:10px;">
-
-</div>
-
-
-<div>
-
-<label>Email *</label>
-
-<input
-type="email"
-name="email"
-value="{{ old('email',$docente->email ?? '') }}"
-style="width:100%;padding:10px;">
-
-</div>
-
-
-<div>
-
-<label>Profesión *</label>
-
-<input
-type="text"
-name="profesion"
-value="{{ old('profesion',$docente->profesion ?? '') }}"
 style="width:100%;padding:10px;">
 
 </div>

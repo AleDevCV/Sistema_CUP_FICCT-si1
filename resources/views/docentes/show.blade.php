@@ -26,7 +26,7 @@
 <p>
 
 <strong>Email:</strong>
-{{ $docente->email }}
+{{ $docente->user?->email }}
 
 </p>
 
@@ -34,13 +34,6 @@
 
 <strong>Teléfono:</strong>
 {{ $docente->telefono }}
-
-</p>
-
-<p>
-
-<strong>Profesión:</strong>
-{{ $docente->profesion }}
 
 </p>
 
