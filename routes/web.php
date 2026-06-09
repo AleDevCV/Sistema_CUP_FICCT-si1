@@ -302,4 +302,8 @@ Route::get('/auditoria', [AuditoriaController::class, 'index'])
     Route::get('/reportes/general', [App\Http\Controllers\ReporteController::class, 'index'])
         ->middleware('role:Administrador|Coordinador|Autoridad')
         ->name('reportes.general');
+
+    Route::get('/reportes/desempeno', [App\Http\Controllers\ReporteController::class, 'desempeno'])
+        ->middleware('role:Administrador|Coordinador|Autoridad')
+        ->name('reportes.desempeno');
 });

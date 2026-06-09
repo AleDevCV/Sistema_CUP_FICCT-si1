@@ -155,6 +155,15 @@
         </li>
         @endhasanyrole
 
+        @hasanyrole('Administrador|Coordinador|Autoridad')
+        <li>
+            <a href="{{ route('reportes.desempeno') }}">
+                <i class="fa-solid fa-chart-bar"></i>
+                <span>Desempeño por Materia</span>
+            </a>
+        </li>
+        @endhasanyrole
+
         @role('Administrador')
         <li>
             <a href="{{ route('auditorias.index') }}">
