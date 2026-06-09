@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Carrera;
+use App\Models\Materia;
 use Illuminate\Http\Request;
 
 class CarreraController extends Controller
@@ -28,9 +29,8 @@ class CarreraController extends Controller
 
     public function create()
     {
-        return view(
-            'carreras.create'
-        );
+        $materias = Materia::where('estado', true)->get();
+        return view('carreras.create', compact('materias'));
     }
 
 
@@ -41,46 +41,23 @@ class CarreraController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-
-            'codigo' => [
-                'required',
-                'string',
-                'max:20',
-                'unique:carreras,codigo'
-            ],
-
-            'nombre' => [
-                'required',
-                'string',
-                'max:255'
-            ],
-
-            'cupo' => [
-                'required',
-                'integer',
-                'min:0'
-            ],
-
-            'gestion' => [
-                'required',
-                'integer'
-            ],
-
-            'estado' => [
-                'required',
-                'boolean'
-            ]
-
+            'codigo' => ['required', 'string', 'max:20', 'unique:carreras,codigo'],
+            'nombre' => ['required', 'string', 'max:255', 'unique:carreras,nombre'],
+            'cupo'   => ['required', 'integer', 'min:0'],
+            'gestion'=> ['required', 'integer'],
+            'estado' => ['required', 'boolean'],
+            'materias' => ['nullable', 'array'],
+            'materias.*' => ['exists:materias,id'],
         ]);
 
-        Carrera::create($data);
+        $materias = $request->input('materias', []);
+        unset($data['materias']);
 
-        return redirect()
-            ->route('carreras.index')
-            ->with(
-                'success',
-                'Carrera creada correctamente'
-            );
+        $carrera = Carrera::create($data);
+        $carrera->materias()->sync($materias);
+
+        return redirect()->route('carreras.index')
+            ->with('success', 'Carrera creada correctamente');
     }
 
 
@@ -103,10 +80,8 @@ class CarreraController extends Controller
 
     public function edit(Carrera $carrera)
     {
-        return view(
-            'carreras.edit',
-            compact('carrera')
-        );
+        $materias = Materia::where('estado', true)->get();
+        return view('carreras.edit', compact('carrera', 'materias'));
     }
 
 
@@ -114,52 +89,26 @@ class CarreraController extends Controller
     Actualizar
     */
 
-    public function update(
-        Request $request,
-        Carrera $carrera
-    )
+    public function update(Request $request, Carrera $carrera)
     {
         $data = $request->validate([
-
-            'codigo' => [
-                'required',
-                'string',
-                'max:20',
-                'unique:carreras,codigo,' . $carrera->id
-            ],
-
-            'nombre' => [
-                'required',
-                'string',
-                'max:255'
-            ],
-
-            'cupo' => [
-                'required',
-                'integer',
-                'min:0'
-            ],
-
-            'gestion' => [
-                'required',
-                'integer'
-            ],
-
-            'estado' => [
-                'required',
-                'boolean'
-            ]
-
+            'codigo' => ['required', 'string', 'max:20', 'unique:carreras,codigo,' . $carrera->id],
+            'nombre' => ['required', 'string', 'max:255', 'unique:carreras,nombre,' . $carrera->id],
+            'cupo'   => ['required', 'integer', 'min:0'],
+            'gestion'=> ['required', 'integer'],
+            'estado' => ['required', 'boolean'],
+            'materias' => ['nullable', 'array'],
+            'materias.*' => ['exists:materias,id'],
         ]);
 
-        $carrera->update($data);
+        $materias = $request->input('materias', []);
+        unset($data['materias']);
 
-        return redirect()
-            ->route('carreras.index')
-            ->with(
-                'success',
-                'Carrera actualizada correctamente'
-            );
+        $carrera->update($data);
+        $carrera->materias()->sync($materias);
+
+        return redirect()->route('carreras.index')
+            ->with('success', 'Carrera actualizada correctamente');
     }
 
 

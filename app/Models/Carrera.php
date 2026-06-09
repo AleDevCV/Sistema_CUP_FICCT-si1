@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Carrera extends Model
@@ -37,5 +38,13 @@ class Carrera extends Model
             Postulante::class,
             'carrera_segunda_opcion_id'
         );
+    }
+
+    /*
+    Materias asociadas (pivote carrera_materia)
+    */
+    public function materias(): BelongsToMany
+    {
+        return $this->belongsToMany(Materia::class);
     }
 }

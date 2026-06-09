@@ -66,6 +66,17 @@ Inactivo
 
 <br><br>
 
+<label>Materias</label>
+<br>
+@foreach($materias as $materia)
+<label>
+    <input type="checkbox" name="materias[]" value="{{ $materia->id }}">
+    {{ $materia->nombre }}
+</label><br>
+@endforeach
+
+<br>
+
 <button>
 
 Guardar

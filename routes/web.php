@@ -136,7 +136,7 @@ Route::middleware('auth')->group(function(){
     Route::resource(
         'carreras',
         CarreraController::class
-    );
+    )->middleware('role:Administrador|Coordinador');
     Route::resource(
     'roles',
     RoleController::class
@@ -148,7 +148,7 @@ Route::resource(
 Route::resource(
     'materias',
     MateriaController::class
-);
+)->middleware('role:Administrador|Coordinador');
 Route::resource(
     'examenes',
     ExamenController::class

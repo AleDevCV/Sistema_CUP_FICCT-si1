@@ -24,12 +24,14 @@
         </li>
         @endif
 
+        @hasanyrole('Administrador|Coordinador')
         <li>
             <a href="{{ route('carreras.index') }}">
                 <i class="fa-solid fa-graduation-cap"></i>
                 <span>Carreras</span>
             </a>
         </li>
+        @endhasanyrole
 
         @role('Administrador')
         <li>
@@ -47,12 +49,14 @@
             </a>
         </li>
 
+        @hasanyrole('Administrador|Coordinador')
         <li>
             <a href="{{ route('materias.index') }}">
                 <i class="fa-solid fa-book"></i>
                 <span>Materias</span>
             </a>
         </li>
+        @endhasanyrole
 
         <li>
             <a href="{{ route('examenes.index') }}">
