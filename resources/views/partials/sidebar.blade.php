@@ -164,6 +164,15 @@
         </li>
         @endhasanyrole
 
+        @role('Autoridad')
+        <li>
+            <a href="{{ route('voz.index') }}">
+                <i class="fa-solid fa-microphone"></i>
+                <span>Asistente de Voz 🎙️</span>
+            </a>
+        </li>
+        @endrole
+
         @role('Administrador')
         <li>
             <a href="{{ route('auditorias.index') }}">

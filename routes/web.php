@@ -306,4 +306,16 @@ Route::get('/auditoria', [AuditoriaController::class, 'index'])
     Route::get('/reportes/desempeno', [App\Http\Controllers\ReporteController::class, 'desempeno'])
         ->middleware('role:Administrador|Coordinador|Autoridad')
         ->name('reportes.desempeno');
+
+    /*
+    | Asistente de Voz (CU20)
+    */
+
+    Route::get('/asistente-voz', [App\Http\Controllers\VozController::class, 'index'])
+        ->middleware('role:Autoridad')
+        ->name('voz.index');
+
+    Route::post('/asistente-voz/procesar', [App\Http\Controllers\VozController::class, 'procesarComando'])
+        ->middleware('role:Autoridad')
+        ->name('voz.procesar');
 });
