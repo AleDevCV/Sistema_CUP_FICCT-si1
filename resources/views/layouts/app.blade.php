@@ -168,9 +168,29 @@ body{
         <h2>@yield('header')</h2>
 
         @auth
-        <div class="user-info">
-            {{ auth()->user()->name }}
-            ({{ auth()->user()->roles->first()->name ?? 'Sin rol' }})
+        <div class="user-info" style="display:flex;align-items:center;gap:16px;">
+            <span>
+                {{ auth()->user()->name }}
+                ({{ auth()->user()->roles->first()->name ?? 'Sin rol' }})
+            </span>
+
+            <form method="POST" action="{{ route('logout') }}" style="display:inline;">
+                @csrf
+                <button type="submit" style="
+                    background:none;
+                    border:1px solid #cbd5e1;
+                    color:#64748b;
+                    padding:6px 14px;
+                    border-radius:8px;
+                    cursor:pointer;
+                    font-size:13px;
+                    transition:0.2s;
+                    white-space:nowrap;"
+                    onmouseover="this.style.background='#fee2e2';this.style.color='#dc2626';this.style.borderColor='#fecaca';"
+                    onmouseout="this.style.background='none';this.style.color='#64748b';this.style.borderColor='#cbd5e1';">
+                    🔒 Cerrar Sesión
+                </button>
+            </form>
         </div>
         @endauth
 

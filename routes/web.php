@@ -162,12 +162,7 @@ Route::middleware('auth')->group(function(){
 
     Route::get(
         '/dashboard',
-        function(){
-
-            return view('dashboard');
-
-        }
-
+        [App\Http\Controllers\DashboardController::class, 'index']
     )->name('dashboard');
 
 
