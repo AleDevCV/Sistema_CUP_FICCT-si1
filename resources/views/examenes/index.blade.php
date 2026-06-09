@@ -2,7 +2,7 @@
 
 @section('title','Exámenes')
 
-@section('header','Gestión de Exámenes')
+@section('header','Gestión de Exámenes — Postulantes')
 
 @section('content')
 
@@ -15,7 +15,7 @@ margin-bottom:20px;">
 
 <h2>
 
-Lista de Exámenes
+Postulantes con Exámenes
 
 </h2>
 
@@ -32,6 +32,53 @@ border-radius:8px;">
 Nuevo Examen
 
 </a>
+
+<form
+method="POST"
+action="{{ route('examenes.generar') }}"
+style="display:inline;"
+onsubmit="return confirm('¿Generar notas aleatorias para TODOS los postulantes habilitados?')">
+
+@csrf
+
+<button
+style="
+padding:10px 15px;
+background:#7c3aed;
+color:white;
+border:none;
+border-radius:8px;
+cursor:pointer;">
+
+🎲 Notas Aleatorias
+
+</button>
+
+</form>
+
+<form
+method="POST"
+action="{{ route('examenes.vaciar') }}"
+style="display:inline;"
+onsubmit="return confirm('¿Eliminar TODOS los exámenes? Esta acción no se puede deshacer.')">
+
+@csrf
+@method('DELETE')
+
+<button
+style="
+padding:10px 15px;
+background:#dc2626;
+color:white;
+border:none;
+border-radius:8px;
+cursor:pointer;">
+
+🗑 Eliminar Todo
+
+</button>
+
+</form>
 @endhasanyrole
 
 </div>
@@ -61,13 +108,9 @@ cellpadding="10">
 
 <tr style="background:#f1f5f9">
 
-<th>ID</th>
-<th>Postulante</th>
-<th>Materia</th>
-<th>Examen</th>
-<th>Nota</th>
-<th>%</th>
-<th>Nota Final</th>
+<th>CI</th>
+<th>Nombre del Postulante</th>
+<th>Exámenes Registrados</th>
 <th>Acciones</th>
 
 </tr>
@@ -76,86 +119,43 @@ cellpadding="10">
 
 <tbody>
 
-@forelse($examenes as $examen)
+@forelse($postulantes as $postulante)
 
 <tr>
 
 <td>
 
-{{ $examen->id }}
+{{ $postulante->ci }}
 
 </td>
 
 <td>
 
-{{ $examen->postulante->nombre_completo }}
+{{ $postulante->nombre_completo }}
 
 </td>
 
 <td>
 
-{{ $examen->materia->nombre }}
+{{ $postulante->total_examenes }}
 
 </td>
 
 <td>
 
-{{ $examen->numero_examen }}
+<a
+href="{{ route('examenes.postulante', $postulante) }}"
+style="
+padding:6px 12px;
+background:#2563eb;
+color:white;
+text-decoration:none;
+border-radius:6px;
+display:inline-block;">
 
-</td>
-
-<td>
-
-{{ $examen->nota }}
-
-</td>
-
-<td>
-
-{{ $examen->porcentaje }}%
-
-</td>
-
-<td>
-
-{{ number_format($examen->notaFinal(),2) }}
-
-</td>
-
-<td>
-
-<a href="{{ route('examenes.show',$examen) }}">
-
-Ver
+Ver Materias/Notas
 
 </a>
-
-|
-
-<a href="{{ route('examenes.edit',$examen) }}">
-
-Editar
-
-</a>
-
-|
-
-<form
-method="POST"
-action="{{ route('examenes.destroy',$examen) }}"
-style="display:inline;">
-
-@csrf
-@method('DELETE')
-
-<button
-onclick="return confirm('¿Eliminar examen?')">
-
-Eliminar
-
-</button>
-
-</form>
 
 </td>
 
@@ -165,9 +165,9 @@ Eliminar
 
 <tr>
 
-<td colspan="8">
+<td colspan="4">
 
-No existen exámenes
+No existen postulantes con exámenes registrados
 
 </td>
 
@@ -181,7 +181,7 @@ No existen exámenes
 
 <br>
 
-{{ $examenes->links() }}
+{{ $postulantes->links() }}
 
 </div>
 

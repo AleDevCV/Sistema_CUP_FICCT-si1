@@ -12,9 +12,18 @@ class Materia extends Model
 
         'nombre',
         'descripcion',
-        'estado'
+        'estado',
+        'ponderacion'
 
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'estado' => 'boolean',
+            'ponderacion' => 'decimal:2',
+        ];
+    }
 
     /*
     Una materia puede tener muchos exámenes

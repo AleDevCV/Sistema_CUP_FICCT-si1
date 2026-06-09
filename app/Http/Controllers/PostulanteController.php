@@ -170,12 +170,15 @@ class PostulanteController extends Controller
 
         $colegios = $this->getColegios();
 
+        $grupos = Grupo::where('estado', true)->get();
+
         return view(
             'postulantes.edit',
             compact(
                 'postulante',
                 'carreras',
-                'colegios'
+                'colegios',
+                'grupos'
             )
         );
     }

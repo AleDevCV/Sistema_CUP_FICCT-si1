@@ -163,6 +163,19 @@ Route::middleware('auth')->group(function(){
 
 
     /*
+    Cierre Académico (CU13)
+    */
+
+    Route::get('/cierre-academico', [App\Http\Controllers\CierreAcademicoController::class, 'index'])
+        ->middleware('role:Administrador')
+        ->name('cierre.index');
+
+    Route::post('/cierre-academico/ejecutar', [App\Http\Controllers\CierreAcademicoController::class, 'ejecutar'])
+        ->middleware('role:Administrador')
+        ->name('cierre.ejecutar');
+
+
+    /*
     CRUD Usuarios
     */
 
@@ -213,16 +226,23 @@ Route::resource(
     'materias',
     MateriaController::class
 )->middleware('role:Administrador|Coordinador');
-Route::resource(
-    'examenes',
-    ExamenController::class
-)->only(['index', 'show']);
+Route::post('/examenes/generar', [ExamenController::class, 'generarAleatorio'])
+    ->middleware('role:Administrador|Coordinador')
+    ->name('examenes.generar');
+
+Route::delete('/examenes/vaciar', [ExamenController::class, 'vaciar'])
+    ->middleware('role:Administrador|Coordinador')
+    ->name('examenes.vaciar');
+
+Route::get('/examenes/postulante/{postulante}', [ExamenController::class, 'postulante'])
+    ->middleware('auth')
+    ->name('examenes.postulante');
 
 Route::resource(
     'examenes',
     ExamenController::class
-)->only(['create', 'store', 'edit', 'update', 'destroy'])
-->middleware('role:Administrador|Coordinador');
+)->parameters(['examenes' => 'examen']);
+
 Route::resource(
     'docentes',
     DocenteController::class

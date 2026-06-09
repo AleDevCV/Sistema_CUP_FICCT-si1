@@ -5,12 +5,7 @@
 @section('header','Detalle Examen')
 
 @section('content')
-<pre>
-{{ print_r($examen->toArray(), true) }}
-</pre>
-<pre>
-{{ print_r($examen->postulante, true) }}
-</pre>
+
 <div class="card">
 
 <h2>
@@ -25,7 +20,7 @@ Examen #{{ $examen->numero_examen }}
 
 <strong>Postulante:</strong>
 
-{{ $examen->postulante->nombre_completo }}
+{{ $examen->postulante?->nombre_completo ?? 'Sin postulante' }}
 
 </p>
 
@@ -35,7 +30,7 @@ Examen #{{ $examen->numero_examen }}
 
 <strong>Materia:</strong>
 
-{{ $examen->materia->nombre }}
+{{ $examen->materia?->nombre ?? 'Sin materia' }}
 
 </p>
 
@@ -56,16 +51,6 @@ Examen #{{ $examen->numero_examen }}
 <strong>Porcentaje:</strong>
 
 {{ $examen->porcentaje }}%
-
-</p>
-
-<br>
-
-<p>
-
-<strong>Nota Final:</strong>
-
-{{ number_format($examen->notaFinal(),2) }}
 
 </p>
 

@@ -274,6 +274,39 @@ value="{{ $carrera->id }}"
 </div>
 
 
+@if(isset($grupos))
+<div>
+
+<label>Grupo Asignado</label>
+
+<select
+name="grupo_id"
+style="width:100%;padding:10px;">
+
+<option value="">
+
+Sin grupo asignado
+
+</option>
+
+@foreach($grupos as $grupo)
+
+<option
+value="{{ $grupo->id }}"
+{{ old('grupo_id', $postulante->grupo_id ?? '') == $grupo->id ? 'selected' : '' }}>
+
+{{ $grupo->nombre }}
+
+</option>
+
+@endforeach
+
+</select>
+
+</div>
+@endif
+
+
 </div>
 
 <br>

@@ -80,6 +80,15 @@ class MateriaController extends Controller
                 'required',
                 'boolean'
 
+            ],
+
+            'ponderacion' => [
+
+                'required',
+                'numeric',
+                'min:0',
+                'max:100'
+
             ]
 
         ]);
@@ -175,6 +184,15 @@ class MateriaController extends Controller
 
                 'required',
                 'boolean'
+
+            ],
+
+            'ponderacion' => [
+
+                'required',
+                'numeric',
+                'min:0',
+                'max:100'
 
             ]
 

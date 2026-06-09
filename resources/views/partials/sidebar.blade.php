@@ -112,6 +112,15 @@
 
         @role('Administrador')
         <li>
+            <a href="{{ route('cierre.index') }}">
+                <i class="fa-solid fa-lock"></i>
+                <span>Cierre Académico</span>
+            </a>
+        </li>
+        @endrole
+
+        @role('Administrador')
+        <li>
             <a href="{{ route('auditorias.index') }}">
                 <i class="fa-solid fa-magnifying-glass"></i>
                 <span>Auditoría</span>

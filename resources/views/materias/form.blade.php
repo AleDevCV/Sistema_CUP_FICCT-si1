@@ -95,6 +95,28 @@ Inactivo
 
 </div>
 
+
+<div>
+
+<label>
+
+Ponderación (%)
+
+</label>
+
+<input
+type="number"
+name="ponderacion"
+min="0"
+max="100"
+step="0.01"
+value="{{ old('ponderacion', $materia->ponderacion ?? 25.00) }}"
+style="
+width:100%;
+padding:10px;">
+
+</div>
+
 </div>
 
 <br>
