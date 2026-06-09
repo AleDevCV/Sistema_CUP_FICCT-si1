@@ -9,6 +9,7 @@ use App\Models\Importacion;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
 
 class PostulanteController extends Controller
 {
@@ -320,6 +321,7 @@ class PostulanteController extends Controller
                     'email'    => $email,
                     'password' => bcrypt($ci),
                 ]);
+                Role::findOrCreate('Postulante');
                 $user->assignRole('Postulante');
 
                 Postulante::create([
