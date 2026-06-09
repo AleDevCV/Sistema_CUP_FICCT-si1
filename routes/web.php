@@ -14,6 +14,7 @@ use App\Http\Controllers\DocenteController;
 use App\Http\Controllers\GrupoController;
 use App\Http\Controllers\GrupoDocenteController;
 use App\Http\Controllers\AuditoriaController;
+use App\Http\Controllers\ProfileController;
 /*
 |--------------------------------------------------------------------------
 | Ruta principal
@@ -133,6 +134,17 @@ Route::middleware('auth')->group(function(){
         '/logout',
         [AuthController::class,'logout']
     )->name('logout');
+
+
+    /*
+    Perfil personal (CU11)
+    */
+
+    Route::get('/perfil', [ProfileController::class, 'edit'])
+        ->name('perfil.edit');
+
+    Route::patch('/perfil', [ProfileController::class, 'update'])
+        ->name('perfil.update');
 
 
     /*

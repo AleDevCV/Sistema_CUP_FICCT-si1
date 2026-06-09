@@ -15,6 +15,13 @@
             </a>
         </li>
 
+        <li>
+            <a href="{{ route('perfil.edit') }}">
+                <i class="fa-solid fa-user-gear"></i>
+                <span>Mi Perfil</span>
+            </a>
+        </li>
+
         @if(auth()->check() && auth()->user()->hasRole('Administrador'))
         <li>
             <a href="{{ route('users.index') }}">
