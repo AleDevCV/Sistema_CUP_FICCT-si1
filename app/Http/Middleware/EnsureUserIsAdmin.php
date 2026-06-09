@@ -25,7 +25,7 @@ class EnsureUserIsAdmin
     public function handle(Request $request, Closure $next): Response
     {
         // Solo permite continuar si el usuario está autenticado y es admin (role_id = 1)
-        if (auth()->check() && auth()->user()->role_id === 1) {
+        if (auth()->check() && auth()->user()->hasRole('Administrador')) {
             return $next($request);
         }
 

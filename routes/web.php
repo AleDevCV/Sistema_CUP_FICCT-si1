@@ -140,7 +140,7 @@ Route::middleware('auth')->group(function(){
     Route::resource(
     'roles',
     RoleController::class
-);
+)->middleware('admin');
 Route::resource(
     'postulantes',
     PostulanteController::class

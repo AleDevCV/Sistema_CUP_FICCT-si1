@@ -167,7 +167,7 @@ body{
 
         <div class="user-info">
             {{ auth()->user()->name }}
-            ({{ auth()->user()->role->name }})
+            ({{ auth()->user()->roles->first()->name ?? 'Sin rol' }})
         </div>
 
     </div>

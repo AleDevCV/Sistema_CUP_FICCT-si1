@@ -17,7 +17,7 @@ When the Tech Lead tells you a Use Case (e.g., CU01) is done:
 1. **Read the Code** — Search for the relevant Controller, Model, routes, and Blade views used in that CU.
 2. **Analyze the Flow** — Understand the exact method calls, database interactions, and view renders.
 3. **Generate Diagrams** — Create the required PlantUML and JSON blocks.
-4. **Append** — Add the results to the file `zDocumentacion/CU_PlantUML_diagrams.md`.
+4. **Create** a NEW file for each Use Case inside the zDocumentacion/UML/ directory (e.g., zDocumentacion/UML/CU01_Gestionar_Inicio.md). NEVER append to a single monolithic file.
 
 ## Output Format
 

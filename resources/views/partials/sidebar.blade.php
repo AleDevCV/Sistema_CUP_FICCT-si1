@@ -15,7 +15,7 @@
             </a>
         </li>
 
-        @if(auth()->check() && auth()->user()->role_id == 1)
+        @if(auth()->check() && auth()->user()->hasRole('Administrador'))
         <li>
             <a href="{{ route('users.index') }}">
                 <i class="fa-solid fa-user"></i>
@@ -31,12 +31,14 @@
             </a>
         </li>
 
+        @role('Administrador')
         <li>
             <a href="{{ route('roles.index') }}">
                 <i class="fa-solid fa-key"></i>
                 <span>Roles</span>
             </a>
         </li>
+        @endrole
 
         <li>
             <a href="{{ route('postulantes.index') }}">

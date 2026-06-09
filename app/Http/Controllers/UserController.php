@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Models\Role;
+use Spatie\Permission\Models\Role;
 
 use Illuminate\Http\Request;
 
@@ -26,8 +26,8 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        // Construir query base con eager-load del rol
-        $users = User::with('role')
+        // Construir query base con eager-load de roles (Spatie)
+        $users = User::with('roles')
             // Búsqueda insensible a mayúsculas en name y email
             ->when($request->filled('search'), function ($q) use ($request) {
                 $term = $request->search;
@@ -36,9 +36,9 @@ class UserController extends Controller
                        ->orWhere('email', 'ilike', "%{$term}%");
                 });
             })
-            // Filtro exacto por rol
+            // Filtro por rol usando Spatie
             ->when($request->filled('role'), function ($q) use ($request) {
-                $q->where('role_id', $request->role);
+                $q->whereHas('roles', fn ($sub) => $sub->where('id', $request->role));
             })
             ->latest()
             ->paginate(10)
@@ -70,18 +70,20 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'role_id'  => 'required|exists:roles,id',
             'name'     => 'required|max:100',
             'username' => 'required|max:50|unique:users',
             'email'    => 'required|email|unique:users',
             'password' => 'required|min:6',
             'status'   => 'nullable|boolean',
+            'role'     => 'required|exists:roles,name',
         ]);
 
-        // Convertir checkbox HTML a booleano
         $validated['status'] = $request->boolean('status');
+        $roleName = $validated['role'];
+        unset($validated['role']);
 
-        User::create($validated);
+        $user = User::create($validated);
+        $user->assignRole($roleName);
 
         return redirect()
             ->route('users.index')
@@ -128,12 +130,12 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         $validated = $request->validate([
-            'role_id'  => 'required|exists:roles,id',
             'name'     => 'required|max:100',
             'username' => 'required|max:50|unique:users,username,' . $user->id,
             'email'    => 'required|email|unique:users,email,' . $user->id,
             'password' => 'nullable|min:6',
             'status'   => 'nullable|boolean',
+            'role'     => 'nullable|exists:roles,name',
         ]);
 
         // Checkbox a booleano
@@ -144,12 +146,23 @@ class UserController extends Controller
             unset($validated['password']);
         }
 
-        // Protección: el admin no puede desactivarse ni cambiarse de rol a sí mismo
+        // Gestionar rol
+        $roleName = null;
+        if ($request->filled('role') && auth()->id() != $user->id) {
+            $roleName = $validated['role'];
+        }
+        unset($validated['role']);
+
+        // Protección: el admin no puede desactivarse a sí mismo
         if (auth()->id() == $user->id) {
-            unset($validated['status'], $validated['role_id']);
+            unset($validated['status']);
         }
 
         $user->update($validated);
+
+        if ($roleName) {
+            $user->syncRoles($roleName);
+        }
 
         return redirect()
             ->route('users.index')
@@ -170,7 +183,7 @@ class UserController extends Controller
         }
 
         // Bloquear eliminación del último administrador del sistema
-        if ($user->role_id == 1 && User::where('role_id', 1)->count() <= 1) {
+        if ($user->hasRole('Administrador') && User::role('Administrador')->count() <= 1) {
             return back()->with('error', 'No puedes eliminar al último administrador del sistema.');
         }
 

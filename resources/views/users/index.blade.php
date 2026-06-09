@@ -113,7 +113,7 @@
                             </td>
 
                             <td>
-                                {{ $user->role->name ?? '-' }}
+                                {{ $user->roles->first()->name ?? '-' }}
                             </td>
 
                             <td>

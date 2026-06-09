@@ -97,7 +97,7 @@
 
                 <div class="col-md-8">
 
-                    {{ $user->role->name ?? '-' }}
+                    {{ $user->roles->first()->name ?? '-' }}
 
                 </div>
 

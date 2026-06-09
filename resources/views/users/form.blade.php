@@ -108,7 +108,7 @@
         </label>
 
         <select
-            name="role_id"
+            name="role"
             class="form-select"
             required
         >
@@ -120,12 +120,12 @@
             @foreach($roles as $role)
 
                 <option
-                    value="{{ $role->id }}"
+                    value="{{ $role->name }}"
                     @selected(
                         old(
-                            'role_id',
-                            $user->role_id ?? ''
-                        ) == $role->id
+                            'role',
+                            $user->roles->first()->name ?? ''
+                        ) == $role->name
                     )
                 >
 

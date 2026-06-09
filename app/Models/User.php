@@ -6,17 +6,16 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Auth\Passwords\CanResetPassword;
+use Spatie\Permission\Traits\HasRoles;
 
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, CanResetPassword;
+    use HasFactory, Notifiable, CanResetPassword, HasRoles;
 
     protected $fillable = [
 
-        'role_id',
         'name',
         'username',
         'email',
@@ -41,29 +40,11 @@ class User extends Authenticatable
     ];
 
     /*
-    Usuario pertenece a un rol
+    Docente asociado a este usuario
     */
-
-    public function role(): BelongsTo
-    {
-        return $this->belongsTo(Role::class);
-    }
-
     public function docente(): HasOne
     {
-        return $this->hasOne(
-            Docente::class
-        );
-    }
-
-    public function isAdmin(): bool
-    {
-        return $this->role?->name === 'Administrador';
-    }
-
-    public function isDocente(): bool
-    {
-        return $this->role?->name === 'Docente';
+        return $this->hasOne(Docente::class);
     }
 
     /*
