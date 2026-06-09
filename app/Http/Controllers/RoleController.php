@@ -5,12 +5,20 @@ namespace App\Http\Controllers;
 use Spatie\Permission\Models\Role;
 use Illuminate\Http\Request;
 
+/**
+ * Controlador de Roles — CU03.
+ * 
+ * CRUD protegido por middleware admin.
+ * Usa Spatie\Permission\Models\Role con withCount('users'),
+ * protege eliminación de roles con usuarios asignados.
+ */
 class RoleController extends Controller
 {
-    /*
-    Mostrar listado
-    */
-
+    /**
+     * Lista roles paginados con conteo de usuarios asignados.
+     *
+     * @return \Illuminate\View\View
+     */
     public function index()
     {
         $roles = Role::withCount('users')
@@ -23,10 +31,11 @@ class RoleController extends Controller
         );
     }
 
-    /*
-    Mostrar formulario crear
-    */
-
+    /**
+     * Muestra formulario de creaci\u00f3n de rol.
+     *
+     * @return \Illuminate\View\View
+     */
     public function create()
     {
         return view(
@@ -34,10 +43,12 @@ class RoleController extends Controller
         );
     }
 
-    /*
-    Guardar
-    */
-
+    /**
+     * Crea un rol Spatie con name \u00fanico y guard_name='web'.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function store(Request $request)
     {
         $data = $request->validate([
@@ -71,10 +82,12 @@ class RoleController extends Controller
             );
     }
 
-    /*
-    Mostrar detalle
-    */
-
+    /**
+     * Muestra detalle del rol con usuarios asignados cargados.
+     *
+     * @param  \Spatie\Permission\Models\Role  $role
+     * @return \Illuminate\View\View
+     */
     public function show(Role $role)
     {
         $role->load('users');
@@ -85,10 +98,12 @@ class RoleController extends Controller
         );
     }
 
-    /*
-    Mostrar formulario editar
-    */
-
+    /**
+     * Muestra formulario de edici\u00f3n de rol.
+     *
+     * @param  \Spatie\Permission\Models\Role  $role
+     * @return \Illuminate\View\View
+     */
     public function edit(Role $role)
     {
         return view(
@@ -97,10 +112,13 @@ class RoleController extends Controller
         );
     }
 
-    /*
-    Actualizar
-    */
-
+    /**
+     * Actualiza rol. unique en name ignora el ID actual.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Spatie\Permission\Models\Role  $role
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function update(
         Request $request,
         Role $role
@@ -137,10 +155,12 @@ class RoleController extends Controller
             );
     }
 
-    /*
-    Eliminar
-    */
-
+    /**
+     * Elimina rol solo si no tiene usuarios asignados.
+     *
+     * @param  \Spatie\Permission\Models\Role  $role
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function destroy(
         Role $role
     )

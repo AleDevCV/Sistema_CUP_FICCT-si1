@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Importacion;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -11,6 +13,7 @@ class Postulante extends Model
 {
     protected $fillable = [
 
+        'user_id',
         'ci',
         'nombres',
         'apellidos',
@@ -22,10 +25,10 @@ class Postulante extends Model
         'colegio',
         'ciudad',
         'titulo_bachiller',
-        'otros_requisitos',
         'carrera_primera_opcion_id',
         'carrera_segunda_opcion_id',
         'grupo_id',
+        'importacion_id',
         'promedio_final',
         'estado_final',
         'estado'
@@ -41,6 +44,14 @@ class Postulante extends Model
             'estado' => 'boolean'
 
         ];
+    }
+
+    /*
+    Usuario asociado (creado automáticamente al registrarse)
+    */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
     /*
@@ -93,6 +104,14 @@ class Postulante extends Model
         return $this->hasOne(
             Pago::class
         );
+    }
+
+    /*
+    Lote de importación
+    */
+    public function importacion(): BelongsTo
+    {
+        return $this->belongsTo(Importacion::class);
     }
 
     /*

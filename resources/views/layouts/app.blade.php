@@ -155,7 +155,9 @@ body{
 
 <body>
 
+@auth
 @include('partials.sidebar')
+@endauth
 
 <div class="main">
 
@@ -165,10 +167,12 @@ body{
 
         <h2>@yield('header')</h2>
 
+        @auth
         <div class="user-info">
             {{ auth()->user()->name }}
             ({{ auth()->user()->roles->first()->name ?? 'Sin rol' }})
         </div>
+        @endauth
 
     </div>
 

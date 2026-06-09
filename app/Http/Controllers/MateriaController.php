@@ -5,12 +5,19 @@ namespace App\Http\Controllers;
 use App\Models\Materia;
 use Illuminate\Http\Request;
 
+/**
+ * Controlador de Materias — CU04.
+ * 
+ * CRUD protegido por middleware role:Administrador|Coordinador.
+ * Incluye conteo de ex\u00e1menes y grupo-docentes asociados.
+ */
 class MateriaController extends Controller
 {
-    /*
-    Mostrar listado
-    */
-
+    /**
+     * Lista materias paginadas con conteo de ex\u00e1menes y grupos.
+     *
+     * @return \Illuminate\View\View
+     */
     public function index()
     {
         $materias = Materia::withCount([
@@ -27,10 +34,11 @@ class MateriaController extends Controller
     }
 
 
-    /*
-    Mostrar formulario crear
-    */
-
+    /**
+     * Muestra formulario de creaci\u00f3n de materia.
+     *
+     * @return \Illuminate\View\View
+     */
     public function create()
     {
         return view(
@@ -39,10 +47,12 @@ class MateriaController extends Controller
     }
 
 
-    /*
-    Guardar
-    */
-
+    /**
+     * Almacena una nueva materia con nombre \u00fanico.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function store(
         Request $request
     )
@@ -89,10 +99,12 @@ class MateriaController extends Controller
     }
 
 
-    /*
-    Ver detalle
-    */
-
+    /**
+     * Muestra detalle de materia con ex\u00e1menes y grupos cargados.
+     *
+     * @param  \App\Models\Materia  $materia
+     * @return \Illuminate\View\View
+     */
     public function show(
         Materia $materia
     )
@@ -111,10 +123,12 @@ class MateriaController extends Controller
     }
 
 
-    /*
-    Mostrar formulario editar
-    */
-
+    /**
+     * Muestra formulario de edici\u00f3n de materia.
+     *
+     * @param  \App\Models\Materia  $materia
+     * @return \Illuminate\View\View
+     */
     public function edit(
         Materia $materia
     )
@@ -126,10 +140,13 @@ class MateriaController extends Controller
     }
 
 
-    /*
-    Actualizar
-    */
-
+    /**
+     * Actualiza materia. unique en nombre ignora el ID actual.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Materia  $materia
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function update(
         Request $request,
         Materia $materia
@@ -178,10 +195,12 @@ class MateriaController extends Controller
     }
 
 
-    /*
-    Eliminar
-    */
-
+    /**
+     * Elimina materia solo si no tiene ex\u00e1menes ni grupos asociados.
+     *
+     * @param  \App\Models\Materia  $materia
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function destroy(
         Materia $materia
     )

@@ -6,12 +6,19 @@ use App\Models\Carrera;
 use App\Models\Materia;
 use Illuminate\Http\Request;
 
+/**
+ * Controlador de Carreras — CU04.
+ * 
+ * CRUD protegido por middleware role:Administrador|Coordinador.
+ * Incluye tabla pivote carrera_materia para vincular materias activas.
+ */
 class CarreraController extends Controller
 {
-    /*
-    Mostrar listado
-    */
-
+    /**
+     * Lista todas las carreras paginadas.
+     *
+     * @return \Illuminate\View\View
+     */
     public function index()
     {
         $carreras = Carrera::latest()->paginate(10);
@@ -23,10 +30,11 @@ class CarreraController extends Controller
     }
 
 
-    /*
-    Mostrar formulario crear
-    */
-
+    /**
+     * Muestra formulario de creación con materias activas para checkboxes.
+     *
+     * @return \Illuminate\View\View
+     */
     public function create()
     {
         $materias = Materia::where('estado', true)->get();
@@ -34,10 +42,12 @@ class CarreraController extends Controller
     }
 
 
-    /*
-    Guardar
-    */
-
+    /**
+     * Almacena una carrera y sincroniza sus materias v\u00eda tabla pivote.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function store(Request $request)
     {
         $data = $request->validate([
@@ -61,10 +71,12 @@ class CarreraController extends Controller
     }
 
 
-    /*
-    Mostrar una carrera
-    */
-
+    /**
+     * Muestra detalle de una carrera (route-model binding).
+     *
+     * @param  \App\Models\Carrera  $carrera
+     * @return \Illuminate\View\View
+     */
     public function show(Carrera $carrera)
     {
         return view(
@@ -74,10 +86,12 @@ class CarreraController extends Controller
     }
 
 
-    /*
-    Mostrar formulario editar
-    */
-
+    /**
+     * Muestra formulario de edici\u00f3n con materias activas y las ya asignadas checked.
+     *
+     * @param  \App\Models\Carrera  $carrera
+     * @return \Illuminate\View\View
+     */
     public function edit(Carrera $carrera)
     {
         $materias = Materia::where('estado', true)->get();
@@ -85,10 +99,14 @@ class CarreraController extends Controller
     }
 
 
-    /*
-    Actualizar
-    */
-
+    /**
+     * Actualiza carrera y re-sincroniza materias en tabla pivote.
+     * unique ignora el ID actual para nombre y c\u00f3digo.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Carrera  $carrera
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function update(Request $request, Carrera $carrera)
     {
         $data = $request->validate([
@@ -112,10 +130,12 @@ class CarreraController extends Controller
     }
 
 
-    /*
-    Eliminar
-    */
-
+    /**
+     * Elimina una carrera. cascadeOnDelete limpia autom\u00e1ticamente carrera_materia.
+     *
+     * @param  \App\Models\Carrera  $carrera
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function destroy(
         Carrera $carrera
     )

@@ -9,7 +9,7 @@
 <div class="card">
 
 <form
-action="{{ route('postulantes.store') }}"
+action="{{ route('registro.store') }}"
 method="POST">
 
 @csrf

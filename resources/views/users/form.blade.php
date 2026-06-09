@@ -122,10 +122,7 @@
                 <option
                     value="{{ $role->name }}"
                     @selected(
-                        old(
-                            'role',
-                            $user->roles->first()->name ?? ''
-                        ) == $role->name
+                        old('role', isset($user) && $user->roles->isNotEmpty() ? $user->roles->first()->name : '') == $role->name
                     )
                 >
 

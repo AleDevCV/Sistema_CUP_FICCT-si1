@@ -159,11 +159,31 @@ style="width:100%;padding:10px;">
 
 <label>Colegio *</label>
 
-<input
-type="text"
+<select
 name="colegio"
-value="{{ old('colegio',$postulante->colegio ?? '') }}"
+class="form-select"
+required
 style="width:100%;padding:10px;">
+
+<option value="">
+
+Seleccione un colegio
+
+</option>
+
+@foreach($colegios as $col)
+
+<option
+value="{{ $col }}"
+@selected(old('colegio', $postulante->colegio ?? '') == $col)>
+
+{{ $col }}
+
+</option>
+
+@endforeach
+
+</select>
 
 </div>
 
@@ -186,10 +206,13 @@ style="width:100%;padding:10px;">
 <label>Título Bachiller *</label>
 
 <input
-type="text"
+type="checkbox"
 name="titulo_bachiller"
-value="{{ old('titulo_bachiller',$postulante->titulo_bachiller ?? '') }}"
-style="width:100%;padding:10px;">
+value="1"
+required
+{{ old('titulo_bachiller', isset($postulante) && $postulante->titulo_bachiller ? 'checked' : '') }}>
+
+Declaro poseer Título de Bachiller.
 
 </div>
 
@@ -255,131 +278,6 @@ value="{{ $carrera->id }}"
 
 </div>
 
-
-<div>
-
-<label>Grupo</label>
-
-<select
-name="grupo_id"
-style="width:100%;padding:10px;">
-
-<option value="">
-
-Seleccione
-
-</option>
-
-@foreach($grupos as $grupo)
-
-<option
-value="{{ $grupo->id }}"
-{{ old('grupo_id',$postulante->grupo_id ?? '')==$grupo->id ? 'selected':'' }}>
-
-{{ $grupo->nombre }}
-
-</option>
-
-@endforeach
-
-</select>
-
-</div>
-
-
-<div>
-
-<label>Promedio Final</label>
-
-<input
-type="number"
-step="0.01"
-name="promedio_final"
-value="{{ old('promedio_final',$postulante->promedio_final ?? '') }}"
-style="width:100%;padding:10px;">
-
-</div>
-
-
-<div>
-
-<label>Estado Final</label>
-
-<select
-name="estado_final"
-style="width:100%;padding:10px;">
-
-<option value="">
-Seleccione
-</option>
-
-<option
-value="Aprobado"
-{{ old('estado_final',$postulante->estado_final ?? '')=='Aprobado' ? 'selected':'' }}>
-
-Aprobado
-
-</option>
-
-<option
-value="Reprobado"
-{{ old('estado_final',$postulante->estado_final ?? '')=='Reprobado' ? 'selected':'' }}>
-
-Reprobado
-
-</option>
-
-<option
-value="Pendiente"
-{{ old('estado_final',$postulante->estado_final ?? '')=='Pendiente' ? 'selected':'' }}>
-
-Pendiente
-
-</option>
-
-</select>
-
-</div>
-
-
-<div style="grid-column:span 2;">
-
-<label>Otros requisitos</label>
-
-<textarea
-name="otros_requisitos"
-style="width:100%;padding:10px;height:100px;">{{ old('otros_requisitos',$postulante->otros_requisitos ?? '') }}</textarea>
-
-</div>
-
-
-<div>
-
-<label>Estado *</label>
-
-<select
-name="estado"
-style="width:100%;padding:10px;">
-
-<option
-value="1"
-{{ old('estado',$postulante->estado ?? 1)==1 ? 'selected':'' }}>
-
-Activo
-
-</option>
-
-<option
-value="0"
-{{ old('estado',$postulante->estado ?? 1)==0 ? 'selected':'' }}>
-
-Inactivo
-
-</option>
-
-</select>
-
-</div>
 
 </div>
 

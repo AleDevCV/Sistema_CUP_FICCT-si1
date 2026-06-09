@@ -89,6 +89,19 @@ Route::middleware('guest')->group(function(){
 
 /*
 |--------------------------------------------------------------------------
+| Registro público de postulantes (CU06)
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/registro', [App\Http\Controllers\PostulanteController::class, 'create'])
+    ->name('registro.create');
+
+Route::post('/registro', [App\Http\Controllers\PostulanteController::class, 'store'])
+    ->name('registro.store');
+
+
+/*
+|--------------------------------------------------------------------------
 | Rutas protegidas
 |--------------------------------------------------------------------------
 */
@@ -141,10 +154,23 @@ Route::middleware('auth')->group(function(){
     'roles',
     RoleController::class
 )->middleware('admin');
+Route::post('/postulantes/importar', [PostulanteController::class, 'importarCsv'])
+    ->middleware('role:Administrador|Coordinador')
+    ->name('postulantes.importar');
+
+Route::get('/postulantes/historial', [PostulanteController::class, 'historialImportaciones'])
+    ->middleware('role:Administrador|Coordinador')
+    ->name('postulantes.historial');
+
+Route::delete('/postulantes/revertir/{importacion}', [PostulanteController::class, 'revertirImportacion'])
+    ->middleware('role:Administrador|Coordinador')
+    ->name('postulantes.revertir');
+
 Route::resource(
     'postulantes',
     PostulanteController::class
-);
+)->except(['create', 'store'])
+->middleware('role:Administrador|Coordinador');
 Route::resource(
     'materias',
     MateriaController::class
@@ -156,9 +182,9 @@ Route::resource(
 Route::resource(
     'docentes',
     DocenteController::class
-);
+)->middleware('role:Administrador|Coordinador');
 Route::resource(
     'grupos',
     GrupoController::class
-);
+)->middleware('role:Administrador|Coordinador');
 });
